@@ -293,6 +293,17 @@ python manage.py migrate
 
 Make sure you are in the root directory for this. Now, go back to the code attribute, and change default to read `default=generate_unique_code`. Do not add the parentheses. We have to migrate first to actually create the Room model, because we use it in generate_unique_code(). If we tried to change the attribute before migrating, we would get a 'Room is undefined" error. So now just makemigrations and migrate one more time. Tim doesn't do this until a bit later, but I decided to do it now while we are here in the models.py.
 
+Now is a good time to commit to git. In general, it is a good idea to commit every time you make a feature change at least. I won't take the time in the future to remind you, but committing often is good practice. If you think you might break the server, you can make a branch and commit to there. Since I am the only one working on my project, I will commit to the main branch only, but it really is good practice to not do that.
 
+To commit a specific file:
 
+```bash
+git add api/models.py
+```
+And then you could commit as normal. In this case, I reccomend -A instead of the file name, because the migrations will have changed as well. BUT if you only change a single file, or a couple files, commit them one by one by filename. Again, for a project this small and working on your own it doesn't matter a whole lot, but it is best practice.
+
+### Creating an API View
+First, we need to create a serializer. We will create more than one, but essentially a serializer is a way to translate between JSON data (the type we would get from an HTTP POST request) and the Python code that our model can use.
+
+Start by creating a new file in api called serializers.py.
 
