@@ -4,9 +4,20 @@ My notes based on Tech with Tim's awesome tutorial series and GitHub repo. I use
 
 I reccommend DO NOT READ THIS, and go watch the series on YouTube instead. The main difference is in the react specific portions, I use functional components instead of class based ones. For rest of the project, I believe Tim's explanation to be much better than mine. That being said, if you would like to just read it here, I will try to explain what I do, and if I do anything different than Tim, I will be sure to explain why.
 
+I also tried to keep all the names the same as in the video, so if you are watching the video and looking here for some specific stuff, hopefully there are no problems with different names. 
+
 One more thing: at the end of Tim's tutorial series, he has a video explaining how to transfer the class based components to functional ones, so if you prefer video format for learning, please watch his video.
 
+This web app is a music room, where a host a can create a room and play music, and guests can join and control the playback.
+
+*A note on "I" vs "We": like I said, most of this is just Tim's tutorial series. I felt it would be confusing to write "Tim did this" for everything, so I stuck with a generic 'we' to represent me, Tim, and hopefully you too. For parts where I differed from the tutorial I tried to use "I" so it is a bit less confusing, but I am sure I mixed it around at some parts.
+
+*Why are you reading this when you could be watching the tutorial? Go do that.
+
+*I said go
+
 ## Tutorial One - Setup
+https://www.youtube.com/watch?v=JD-age0BPVo&list=PLzMcBGfZo4-kCLWnGmK0jUBmGLaJxvi4j&index=1 
 
 ### Setup - virtualenv
 Make sure to have Python installed, and create a new folder in File Explorer. In VSCode, right click in the explorer, and select "Add Folder to Workspace". Add the new folder you created, I called mine "Django Course". VSCode should detect your Python version, if it doesn't you can follow these steps: press CTRL+SHIFT+P, to open the search menu, and search for 'intepreter'. Select 'Python:Select Interpreter', choose the project directory, and the version of Python.
@@ -168,4 +179,120 @@ This will run the server on port 8000, and you will be able to follow the link i
 The second way of running, which I reccommend, is to use the VSCode debugger. I like doing this because I can either run without debugging to quickly open the server, or actually add in break points and run the full debugger. If you don't have expierence with debugging or with the VSCode debugger, this is not the right place to learn it, but I do reccommend trying it out for yourself and learn by doing.
 
 To set it up, click on the debugger icon in the left. Then, in the top left, choose the VSCode project you want to track. I chose Python Debugger, and then Python Debugger:Django. Once that is done, you can feel free to use the debugger to its full extent, or simply use it to tun the server by pressing CTRL+F5. This will open a new terminal, which I like because it is an easy way to keep my server terminal separate from the terminal window I type commands into. By default the server is also run on port 8000, so if you want to debug and run the server normally, you will need to change this port for the debugger. 
+
+### Creating a git repository
+This is separete from Tim's tutorial, you can skip it completley, but I reccommend doing some type of version control for your projects, even if just to get familiar with it. I will talk later about creating a GitHub repo and all that, for now lets just make a basic git repository so we can track changes made.
+
+If you are a more advanced git user, feel free to skip this section as well, as I will only cover the very basics. 
+
+To install git, go to https://git-scm.com/downloads and download the latest version. After that, you should be good to use git commands in the terminal.
+
+In the terminal, type
+
+```bash
+git init
+```
+
+to initialize a git repository. Before we make any changes, lets add a .gitignore file. This will let you specify files or directories to not track. Add a new file to the DjangoCourse folder, and call it .gitignore. For now, we will onyl add the db.sqlite3 file. We don't want to add the database to git or GitHub, when we later push the repo.
+
+Simply type `db.sqlite3` in the gitignore file, and you chould see it go from green to grey, assuming you are using VSCode. There also might be other stuff we don't need to track at this point, but for now I just put the database file. 
+
+VSCode also has it's own way to interact with git, instead of the command line. I will give the command here, but if you prefer to use the built in integration that is up to you.
+
+Next, let's add all the files to the staging area for our initial commit.
+
+```bash
+git add -A
+```
+
+This will add all changed files to the staging area. We can view this staging are if we want to.
+
+```bash
+git status -v
+```
+
+You can omit the -v if you want to, it is the 'verbose' flag and explicitly shows all the changes to the files. 
+
+`git status` simply shows the status of the working directory and the staging area. If you want to view only the files that have been changed, us
+
+```bash
+git diff --cached --name-only
+```
+
+Next, commit the staging area.
+
+```bash
+git commit -m 'Initial commit'
+```
+Note, you need to add a message to every commit. If you don't add the -m flag and type your message in the command line, a window will open where you can type your message instead.
+
+Now, if we run `git status` again, we see that there is nothing to commit. For now, we will only use `git add` and `git commit`. There is so much more to git, but that would take a course unto itself, so for now we will stick to basics.
+
+## Tutorial Two - Djanog REST Framework
+
+https://www.youtube.com/watch?v=uhSmgR1hEwg&list=PLzMcBGfZo4-kCLWnGmK0jUBmGLaJxvi4j&index=2 
+
+### Creating Our First Model
+
+Django's models allow us to store data in a database using Python, instead of an external database. Now, we could connect to a MySQL database or something and sort data in there instead, and if you are comfortable to do that go right ahead. We will focus on Django for this tutorial.
+
+The first model we make will be a Room model, to hold the data we want associated with each room.
+
+Go to the models.py in the api folder, and create a Room class.
+
+```python
+class Room(models.Model):
+    code = models.CharField(max_length=4, default="", unique=True)
+    host = models.CharField(max_length=50, unique=True)
+    guest_can_pause = models.BooleanField(null=False, default=False)
+    votes_to_skip = models.IntegerField(null=False, default=1)
+    created_at = models.DateTimeField(auto_now_add=True)
+```
+
+Models in Django are represented by classes. We can give each class attributes and methods, and build out our model.
+
+These are the attributes we will use, although you could add your own or omit ones you don't like. The max lengths of things don't matter too much, I chose 4 for my code while in the video Tim chooses 8. The host will be a generated key that we will get into in a later tutorial.
+
+In general, we want to have most of the code logic in our models, and have our views be relatively sparse. For this project it won't matter a whole bunch, but keep that in mind if your own project is more complex. 
+
+Next, we create a function to generate a random code each time a room is created
+
+First, add these imports
+
+```python
+import random 
+import string
+```
+
+The function will first generate a random list of ASCII characters, then query all the open rooms to see if the codeis in use. If it is, we generate another one and repeat. If not, we've got our code!
+
+```python
+# Generate a code, check if it exists already, reapeat
+def generate_unique_code():
+    # Define the length of the code
+    length = 4
+    
+    # Until we find a unique code, keep generating new ones
+    while True:
+        # Generate a string of all uppercase letter, choose 4 random ones, and join them into a single string
+        code = ''.join(random.choices(string.ascii_uppercase, k=length))
+        
+        # Get a list of all rooms with a code equal to the generated code. If there are none, BOOM unique code
+        if Room.objects.filter(code=code).count() == 0:
+            return code
+```
+
+In the video, Tim adds a break to the if statement, and returns outside the while loop, I prefer this way.
+
+Since we have changed our model, we need to makemigrations and migrate again.
+
+```bash
+python manage.py makemigrations 
+python manage.py migrate
+```
+
+Make sure you are in the root directory for this. Now, go back to the code attribute, and change default to read `default=generate_unique_code`. Do not add the parentheses. We have to migrate first to actually create the Room model, because we use it in generate_unique_code(). If we tried to change the attribute before migrating, we would get a 'Room is undefined" error. So now just makemigrations and migrate one more time. Tim doesn't do this until a bit later, but I decided to do it now while we are here in the models.py.
+
+
+
 
