@@ -507,6 +507,7 @@ I used the html-5 boilerplate VSCode extension, you do not need it, but you can 
         <title>Music Controller</title>
         <meta name="description" content="">
         <meta name="viewport" content="width=device-width, initial-scale=1">
+        {% load static %}
         <link rel="stylesheet" type="text/css" href="{% static "css/index.css" %}">
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
         <link
@@ -556,15 +557,36 @@ Almost there! In the next section we will use react to actually show something o
 
 First, go to src/components and create App.js.
 
+Imports:
 ```javascript
 import React from "react";
 import { render } from "react-dom";
-
+```
+Component:
+```javascript
 export default function App()
 {
-    return render(<h1>Hello There!</h1>)
+    return (<h1>Hello There!</h1>)
 }
+```
+
+Show the component on the html page:
+```javascript
+const appDiv = document.getElementById("app")
+render(<App />, appDiv)
 ```
 
 This is the beginning of the main divergence between this project and Tim's version. This is a functinoal components, as opposed to a class based component as shown in the video. You can see the imports are a little different, and the component itself is much simpler. 
 
+Last couple things: first, we need to add App to the index.js.
+```javascript
+import App from './components/App';
+```
+
+Next, we need to run the webpack development script we added in package.json. Make sure your server is running and you have erros first, then in the terminal, in the frontend directory type
+
+```bash
+npm run dev
+```
+
+If it runs ok, it will auto update everytime the javascript is changed, and bundle it all into one main.js file in static/frontend/. I like to open a third terminal at this point, and have one for webpack, one for the server, and one to type commands in. Just make sure to cd to the correct directories before running commands.
