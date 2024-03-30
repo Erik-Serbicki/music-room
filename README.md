@@ -344,4 +344,6 @@ urlpatterns = [
 ]
 ```
 
-Now, if we navigate to api/create_room/ we will see the new APIView. The .as_view() is there because right now we want to see the view in the webpage.  
+Now, if we navigate to api/create_room/ we will see the new APIView. The .as_view() is there because right now we want to see the view in the webpage.
+
+To see our code in action, fill in all the fields, and click POST. You will see the space above the input fields update, and return the JSON of the data you just put in.  
