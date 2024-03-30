@@ -332,7 +332,7 @@ from . import serializers, models
 
 # Create your views here.
 class RoomView(generics.CreateAPIView):
-    queryset = models.Room.objects.all
+    queryset = models.Room.objects.all()
     serializer_class = serializers.RoomSerializer
 ```
 
@@ -340,10 +340,12 @@ We also need to change the endpoints in urls.py.
 
 ```python
 urlpatterns = [
-    path('create_room', views.RoomView.as_view())
+    path('room', views.RoomView.as_view())
 ]
 ```
 
 Now, if we navigate to api/create_room/ we will see the new APIView. The .as_view() is there because right now we want to see the view in the webpage.
 
-To see our code in action, fill in all the fields, and click POST. You will see the space above the input fields update, and return the JSON of the data you just put in.  
+To see our code in action, fill in all the fields, and click POST. You will see the space above the input fields update, and return the JSON of the data you just put in. You can make just one room, or change the host and code, and make multiple.
+
+Now, go back to views.py and change CreateAPIView to ListAPIView. This class will let you view all of the rooms created, but not allow to create new ones.
