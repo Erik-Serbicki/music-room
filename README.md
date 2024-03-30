@@ -321,4 +321,27 @@ Here we create the class that will serialize the Room data, we specify what mode
 
 Next, we will create the endpoint api view to display the data. Eventually, these pages won't be visible in the final product, but for now they will be used to not only move data back and forth, but to visualize it at well.
 
-In views.py, 
+In views.py, create the RoomView class, which will inherit from the CreateAPIView class. Just like with the serilizer, we don't need to add that much functionality, because most of it is in the CreateAPIView class we inherit from. IF you want to see more about what all of these classes do, check out the Django documentation.
+
+We do need to define a queryset (what we want to return), which will just be all of the fields we made for the model, and a serializer to convert from JSON format to python code.
+
+```python
+from django.shortcuts import render
+from rest_framework import generics
+from . import serializers, models
+
+# Create your views here.
+class RoomView(generics.CreateAPIView):
+    queryset = models.Room.objects.all
+    serializer_class = serializers.RoomSerializer
+```
+
+We also need to change the endpoints in urls.py.
+
+```python
+urlpatterns = [
+    path('create_room', views.RoomView.as_view())
+]
+```
+
+Now, if we navigate to api/create_room/ we will see the new APIView. The .as_view() is there because right now we want to see the view in the webpage.  
