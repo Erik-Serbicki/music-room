@@ -358,6 +358,9 @@ Tim goes through this step by step, and in here I will be doing so as well. He m
 
 For the rest, lets get this install and setup going! I will assume you have npm and node.js already, as Tim covers that in the first video. If you don't there are plenty of install guides, but I will not cover it here.
 
+
+### Installing the packages
+
 First, let's just check we have npm installed. For this, we want to be in the music_controller directory.
 
 ```bash
@@ -415,6 +418,8 @@ Next, we go back to following the video.
 npm i react-router-dom
 npm i @mui/icons-material
 ```
+
+### Config files
 
 Now lets set up some config files for babel and webpack. In the frontend folder, create babel.config.json
 
@@ -474,3 +479,11 @@ module.exports = {
 
 This config code tells webpack where to find the javascript files, and where to bundle them to. It will only work if you have named the directories the same, so if you changed them earlier, change them here too.
 
+Lastly, we will go the package.json and add two scripts, one to run for development, and one to run for production.
+
+```javascript
+"scripts": {
+    "dev": "webpack --mode development --watch",
+    "build": "webpack --mode production"
+  },
+```
