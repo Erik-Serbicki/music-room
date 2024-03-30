@@ -590,3 +590,5 @@ npm run dev
 ```
 
 If it runs ok, it will auto update everytime the javascript is changed, and bundle it all into one main.js file in static/frontend/. I like to open a third terminal at this point, and have one for webpack, one for the server, and one to type commands in. Just make sure to cd to the correct directories before running commands.
+
+All that being said, navigate to the home page of your website, which is just the localhost without any endpoints, and you should see your page being rendered!
