@@ -349,3 +349,28 @@ Now, if we navigate to api/create_room/ we will see the new APIView. The .as_vie
 To see our code in action, fill in all the fields, and click POST. You will see the space above the input fields update, and return the JSON of the data you just put in. You can make just one room, or change the host and code, and make multiple.
 
 Now, go back to views.py and change CreateAPIView to ListAPIView. This class will let you view all of the rooms created, but not allow to create new ones.
+
+## Tutorial Three - React integration
+
+https://www.youtube.com/watch?v=6c2NqDyxppU&list=PLzMcBGfZo4-kCLWnGmK0jUBmGLaJxvi4j&index=3
+
+Tim goes through this step by step, and in here I will be doing so as well. He mentions there are easier ways to do set this up, but he, as well as I, think it is a good idea to learn by doing it the slow manual way like this first. If you already know how to get this up and running, go ahead and do that, and come back when you are ready to get started in react.
+
+For the rest, lets get this install and setup going! I will assume you have npm and node.js already, as Tim covers that in the first video. If you don't there are plenty of install guides, but I will not cover it here.
+
+First, let's just check we have npm installed. For this, we want to be in the music_controller directory.
+
+```bash
+cd music_controller
+npm
+```
+
+My version of npm is 8.5.0, if you get an error here, it means you did something wrong in your npm install.
+
+Next, we will create a new app for django to handle all of the frontend. We are going to create this inside the music_controller directory, so we will need to use django-admin instead of python manage.py unless you use the full paths.
+
+```bash
+django-admin startapp frontend
+cd frontend
+```
+
