@@ -555,3 +555,16 @@ Almost there! In the next section we will use react to actually show something o
 ### Creating A Component in React
 
 First, go to src/components and create App.js.
+
+```javascript
+import React from "react";
+import { render } from "react-dom";
+
+export default function App()
+{
+    return render(<h1>Hello There!</h1>)
+}
+```
+
+This is the beginning of the main divergence between this project and Tim's version. This is a functinoal components, as opposed to a class based component as shown in the video. You can see the imports are a little different, and the component itself is much simpler. 
+

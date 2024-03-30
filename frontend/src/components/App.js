@@ -3,5 +3,8 @@ import { render } from "react-dom";
 
 export default function App()
 {
-    return render(<h1>Hello There!</h1>)
+    return (<h1>Hello There!</h1>)
 }
+
+const appDiv = document.getElementById("app")
+render(<App />, appDiv)
