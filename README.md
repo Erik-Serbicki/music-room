@@ -305,5 +305,20 @@ And then you could commit as normal. In this case, I reccomend -A instead of the
 ### Creating an API View
 First, we need to create a serializer. We will create more than one, but essentially a serializer is a way to translate between JSON data (the type we would get from an HTTP POST request) and the Python code that our model can use.
 
-Start by creating a new file in api called serializers.py.
+Start by creating a new file in api called serializers.py. In here, we will create the serializer for the Room model.
 
+```python
+from rest_framework import serializers
+from . import models
+
+class RoomSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.Room
+        fields = ('id', 'code', 'host', 'guest_can_pause', 'votes_to_skip', 'created_at')
+```
+
+Here we create the class that will serialize the Room data, we specify what model we want it to use, and what the fields are. Notice the fields are the same as what we created in the model, except we add the 'id' field. This will be auto populated as rooms are created. Since we inherited from the serializers.ModelSerializer class, no further code is required to do what we want, the parent class provides most of the functionality. 
+
+Next, we will create the endpoint api view to display the data. Eventually, these pages won't be visible in the final product, but for now they will be used to not only move data back and forth, but to visualize it at well.
+
+In views.py, 
