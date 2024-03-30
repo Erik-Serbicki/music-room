@@ -592,3 +592,53 @@ npm run dev
 If it runs ok, it will auto update everytime the javascript is changed, and bundle it all into one main.js file in static/frontend/. I like to open a third terminal at this point, and have one for webpack, one for the server, and one to type commands in. Just make sure to cd to the correct directories before running commands.
 
 All that being said, navigate to the home page of your website, which is just the localhost without any endpoints, and you should see your page being rendered!
+
+## Tutorial Four - React Router
+
+https://www.youtube.com/watch?v=YEmjBEDyVSY&list=PLzMcBGfZo4-kCLWnGmK0jUBmGLaJxvi4j&index=4
+
+My code differs from the video here as well, as the syntac for using the Router is dfferent as of 2022.
+
+### Add Styling to the App
+
+We have already set up the index.html to have a stylesheet, but we haven't actually created the stylesheet yet. Go to the static/css folder, and create index.css. You can name iit something else, as long as you also change the index.html to reflect the change.
+
+In the css folder we will make a few basic changes, but we will use material ui in our react code for most of the actual styling. You can, of course, add more to your css file if you want to.
+
+```css
+html, body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    /* color: white; */
+}
+
+#main{
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    left: 0;
+    top: 0;
+}
+
+#app{
+    width: 100%;
+    height: 100%;
+    display: flex;
+}
+```
+
+We are making the page fullscreen, and then changing some properties for the two divs we have in index.html. Later, Tim is going to add a gradient background that the white text will look good on, but for now the page background is white so I will leave that commented out.
+
+### React Components
+
+I reccommend checking out the react page for learning - https://react.dev/learn
+
+This is where I found most of the logic for functional components I use in this project.
+
+For the basics, react works via Components. A component is a function that returns some html. We build a page out of many different components.
+
+In the video, Tim talks about props. I will skip props here, because they work quite differently with functional components, but we will use them later when we actually need to. He also breifly mentions state, which we will also skip for now and return to when we need to use it.
+
+Lets start coding now! Make a new file called HomePage.js in the src/components directory. We are going to create multiple pages, Route to them in the HomePage, and show the HomePage in the App.js file.
+
