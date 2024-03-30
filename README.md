@@ -444,37 +444,38 @@ Now lets set up some config files for babel and webpack. In the frontend folder,
 Next, create webpack.config.js
 
 ```javascript
-const path = require("path")
-const webpack = require("webpack")
+const path = require("path");
+const webpack = require("webpack");
 
 module.exports = {
-    entry: "./src/index.js",
-    output : {
-        path: path.resolve(__dirname, "./static/frontend"),
-        filename: "[name].js",
-    },
-    module: {
-        rules: [
-            {
-                test: /\.js$/,
-                exclude: /node_modules/,
-                use: {
-                    loader: "babel-loader",
-                },
-            },
-        ],
-    },
-    optimization: {
-        minimize: true,
-    },
-    plugins: [
-        new webpack.DefinePlugin({
-            "process.env" : {
-                NODE_ENV: JSON.stringify("production"),
-            },
-        }),
+  entry: "./src/index.js",
+  output: {
+    path: path.resolve(__dirname, "./static/frontend"),
+    filename: "[name].js",
+  },
+  module: {
+    rules: [
+      {
+        test: /\.js$/,
+        exclude: /node_modules/,
+        use: {
+          loader: "babel-loader",
+        },
+      },
     ],
-}
+  },
+  optimization: {
+    minimize: true,
+  },
+  plugins: [
+    new webpack.DefinePlugin({
+      "process.env": {
+        // This has effect on the react lib size
+        NODE_ENV: JSON.stringify("production"),
+      },
+    }),
+  ],
+};
 ```
 
 This config code tells webpack where to find the javascript files, and where to bundle them to. It will only work if you have named the directories the same, so if you changed them earlier, change them here too.
@@ -566,14 +567,14 @@ Component:
 ```javascript
 export default function App()
 {
-    return (<h1>Hello There!</h1>)
+    return (<h1>Hello There!</h1>);
 }
 ```
 
 Show the component on the html page:
 ```javascript
-const appDiv = document.getElementById("app")
-render(<App />, appDiv)
+const appDiv = document.getElementById("app");
+render(<App />, appDiv);
 ```
 
 This is the beginning of the main divergence between this project and Tim's version. This is a functinoal components, as opposed to a class based component as shown in the video. You can see the imports are a little different, and the component itself is much simpler. 
