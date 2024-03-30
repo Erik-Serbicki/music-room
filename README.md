@@ -383,6 +383,8 @@ Now, initialize a new npm project. This will add a bunch of files to the directo
 ```bash
 npm init -y
 ```
+Once you see the node_modules folder appear, make sure to put node_modules/ in the .gitignore file. Not doing so will massivley bloat the commit.
+
 Now we get to the fun part: installing a bunch of pakcages that might not work. Yay!
 
 We will use webpack to compress all out different javascript files into a single output file, and babel to make our code work on many different browsers.
@@ -407,3 +409,55 @@ The next install is different as well. If you try the install Tim shows, you'll 
 npm i @babel-plugin-transform-class-properties
 ```
 
+Next, we go back to following the video.
+
+```bash
+npm i react-router-dom
+npm i @mui/icons-material
+```
+
+Now lets set up some config files for babel and webpack. In the frontend folder, create babel.config.json
+
+```json
+{
+    "presets" : [
+        
+        [
+            "@babel/preset-env",
+        {
+            "targets" : {
+                "node": 10
+            }
+        }
+        ],
+        "@babel/preset-react"
+    ],
+    "plugins" : ["@babel/plugin-transform-class-properties"]
+} 
+```
+
+Next, create webpack.config.js
+
+```javascript
+const path = require("path")
+const webpack = require("webpack")
+
+module.exports = {
+    entry: "./src/index.js",
+    output : {
+        path: path.resolve(__dirname, "./static/frontend"),
+        filename: "[name].js",
+    },
+    module: {
+        rules: [
+            {
+                test: /\.js$/,
+                exclude: /node_modules/,
+                use: {
+                    loader: "babel-loader",
+                },
+            },
+        ],
+    }
+}
+```
