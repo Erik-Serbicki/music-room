@@ -487,3 +487,71 @@ Lastly, we will go the package.json and add two scripts, one to run for developm
     "build": "webpack --mode production"
   },
 ```
+
+### Creating Our First Page
+
+First, we will create the entry point javascript file. Add index.js to the src/ folder.
+
+The game plan is to create a minimal HTML template to link to Django, and the have our react code take over that HTML file to create our webpage.
+
+In the templates folder, make a new folder called frontend, and in there make an index.html file.
+
+I used the html-5 boilerplate VSCode extension, you do not need it, but you can install it in the VSCode extensions tab if you want. We want to set up a very basic html page, we will add jquery and the roboto font from GoogleFonts as well.
+
+```html
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title>Music Controller</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" type="text/css" href="{% static "css/index.css" %}">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+        <link
+            rel="stylesheet"
+            href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap"
+        />
+    </head>
+    <body>
+        <div id="main">
+            <div id="app"></div>
+        </div>
+        <script src="{% static "frontend/main.js" %}" ></script>
+    </body>
+</html>
+```
+
+Now lets go views.py in the frontend folder and set that up. The view will render the html file we just made.
+
+Don't forget, we need to make an endpoint to point to this view. We need to create a urls.py, add the app url to the urls.py in music_controller, AND add the frontend app to the settings.py file.
+
+add to urls.py in music_controller:
+
+```python
+path("", include('frontend.urls')),
+```
+
+add to settings.py in INSTALLED_APPS:
+
+```python
+"frontend.apps.FrontendConfig",
+```
+
+add to urls.py in frontend:
+
+```python
+from django.urls import path
+from . import views
+
+urlpatterns = [
+    path('', views.index)
+]
+```
+
+Almost there! In the next section we will use react to actually show something on the webpage.
+
+### Creating A Component in React
+
+First, go to src/components and create App.js.
