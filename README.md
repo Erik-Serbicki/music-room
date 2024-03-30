@@ -458,6 +458,19 @@ module.exports = {
                 },
             },
         ],
-    }
+    },
+    optimization: {
+        minimize: true,
+    },
+    plugins: [
+        new webpack.DefinePlugin({
+            "process.env" : {
+                NODE_ENV: JSON.stringify("production"),
+            },
+        }),
+    ],
 }
 ```
+
+This config code tells webpack where to find the javascript files, and where to bundle them to. It will only work if you have named the directories the same, so if you changed them earlier, change them here too.
+
