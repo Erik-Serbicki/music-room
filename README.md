@@ -367,10 +367,43 @@ npm
 
 My version of npm is 8.5.0, if you get an error here, it means you did something wrong in your npm install.
 
-Next, we will create a new app for django to handle all of the frontend. We are going to create this inside the music_controller directory, so we will need to use django-admin instead of python manage.py unless you use the full paths.
+Next, we will create a new app for django to handle all of the frontend. We are going to create this inside the DjangoCourse directory, so at the same level as api and music_controller.
 
 ```bash
-django-admin startapp frontend
+python manage.py startapp frontend
 cd frontend
+```
+
+We will now manually create some folders to hold future files. Create three folders: src, static, and templates. In src create another folder called components, and in static create three more folders called frontend, css, and images. It should look like this: 
+
+![Frontend app directory](/tut_images/FrontendApp.png)
+
+Now, initialize a new npm project. This will add a bunch of files to the directory. Make sure you are in the DjangoCourse/frontend directory
+
+```bash
+npm init -y
+```
+Now we get to the fun part: installing a bunch of pakcages that might not work. Yay!
+
+We will use webpack to compress all out different javascript files into a single output file, and babel to make our code work on many different browsers.
+
+```bash
+npm i webpack webpack-cli --save-dev
+npm i @babel/core babel-loader @babel/preset-env @babel/preset-react --save-dev
+npm i react react-dom --save-dev
+```
+
+Those are all the same as in Tim's video, but should be fine to get the latest version. Tim installs material-ui next, and this is the first main difference. Material-ui is now in version 5, with a v6 alpha. The syntax is different, including the install. 
+
+```bash
+npm install @mui/material @emotion/react @emotion/styled
+```
+
+We will use material ui to build nice (ish) looking webpages with minimal effort. It is sort of like Boootstrap for CSS, if you are familiar with that.
+
+The next install is different as well. If you try the install Tim shows, you'll get a message saying it is deprecated, and point you to this package
+
+```bash
+npm i @babel-plugin-transform-class-properties
 ```
 
