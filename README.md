@@ -641,5 +641,80 @@ For the basics, react works via Components. A component is a function that retur
 
 In the video, Tim talks about props. I will skip props here, because they work quite differently with functional components, but we will use them later when we actually need to. He also breifly mentions state, which we will also skip for now and return to when we need to use it.
 
-Lets start coding now! Make a new file called HomePage.js in the src/components directory. We are going to create multiple pages, Route to them in the HomePage, and show the HomePage in the App.js file.
+Lets start coding now! Make three new files called HomePage.js, JoinRoom.js, and CreateRoom.js in the src/components directory. We are going to create multiple pages, Route to them in the HomePage, and show the HomePage in the App.js file.
+
+My code looks different than in the video due to the react-router-dom being a new version, and my use of functional components. However, the process is the same, the syntax is just a bit different. 
+
+In App.js, change the return statement to this:
+
+```javascript
+return (
+        <div>
+            <HomePage />
+        </div>
+        
+    );
+```
+
+Make sure to import the home page as well.
+```javascript
+import HomePage from "./HomePage";
+```
+
+Everything else can stay the same. Here, we are just telling our App function to return the HomePage component, which will have the navigation to our other pages built in to it.
+
+HomePage.js:
+
+```javascript
+import React from "react";
+import JoinRoom from "./JoinRoom";
+import CreateRoom from "./CreateRoom";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+
+export default function HomePage(){
+    return(
+        <Router>
+            <Routes>
+                <Route path="/" element={<p>This is the home page</p>} />
+                <Route path="/join" element={<JoinRoom />} />
+                <Route path="/create" element={<CreateRoom />} />
+            </Routes>
+        </Router>
+    );
+}
+```
+
+The Router component from react-router-dom allows us to provide navigation to other components based on a url endpoint. Notice that for the home page, we don't add the 'exact' keyword like in the video. The Route component now has that excact functionality by default, so we don't need to specify it anymore. 
+
+JoinRoom.js:
+
+```javascript
+import React from "react";
+
+export default function JoinRoom(){
+    return <p>This is the join room page.</p>;
+}
+```
+
+CreateRoom.js:
+
+```javascript
+import React from "react";
+
+ export default function CreateRoom(){
+    return <p>This is the create room page.</p>;
+}
+```
+
+Before we can see the pages, we need to add the urls to the frontend urls.py. Since react handles the 'view' we can point all the urls we add to views.index.
+
+```python
+urlpatterns = [
+    path('', views.index),
+    path('join/', views.index),
+    path('create/', views.index)
+]
+```
+
+Now you should be able to navigate to '/', '/join', and '/create' and see your pages!
 
