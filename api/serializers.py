@@ -11,4 +11,3 @@ class CreateRoomSerializer(serializers.ModelSerializer):
         model = models.Room
         fields = ('guest_can_pause', 'votes_to_skip')
         
-        
