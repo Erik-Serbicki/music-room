@@ -7,7 +7,7 @@ export default function HomePage(){
     return(
         <Router>
             <Routes>
-                <Route path="/" element={<p>This is the home page</p>} />
+                <Route path="/" element={<p>This is the test page</p>} />
                 <Route path="/join" element={<JoinRoom />} />
                 <Route path="/create" element={<CreateRoom />} />
             </Routes>

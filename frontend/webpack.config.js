@@ -5,7 +5,7 @@ module.exports = {
   entry: "./src/index.js",
   output: {
     path: path.resolve(__dirname, "./static/frontend"),
-    filename: "[name].js",
+    filename: "bundle.js",
   },
   module: {
     rules: [
@@ -17,6 +17,13 @@ module.exports = {
         },
       },
     ],
+  },
+  devServer :{
+    compress: true,
+    port: 8000,
+    open: true,
+    hot: true,
+    publicPath:  "./static/frontend"
   },
   optimization: {
     minimize: true,

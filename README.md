@@ -803,3 +803,68 @@ path('create_room', views.CreateRoomView.as_view()),
 Now, when you navigate to api/create_room/, you should be able to change the values of votes_to_pause, and guest_can_skip, and see the changes update on screen.
 
 And you can still go to api/room/ at any point to see a list of all the rooms you have created. 
+
+## Tutorial Six - Material UI Components
+https://www.youtube.com/watch?v=bQXhG1eZGLM&list=PLzMcBGfZo4-kCLWnGmK0jUBmGLaJxvi4j&index=6
+
+In this video, Tim makes the CreateRoom page frontend, with React and MaterialUI. In my code I will be going over the differences due to functional components and changes in materialUI.
+
+### Setting Up the Frontend
+First, we need to import a whole bunch of MaterialUI components. I do reccommend the MaterialUI documentation, especially if something in this tutorial is not making any sense to you.
+
+First off, the import statements themselves are going to look different. In the video, the syntax is '@material-ui/core/ComponentName'. For my version of MaterialUI, it will be '@mui/material/ComponentName'. I don't beleive any of the component names themselves have changed, but if so I will note it.
+
+Go to frontend/CreateRoom.js
+
+Big 'ol list of imports:
+```javascript
+import Button from "@mui/material/Button";
+import Grid from "@mui/material/Grid";
+import Typography from "@mui/material/Typography";
+import TextField from "@mui/material/TextField";
+import FormHelperText from "@mui/material/FormHelperText";
+import FormControl from "@mui/material/FormControl";
+import Radio from "@mui/material/Radio";
+import RadioGroup from "@mui/material/RadioGroup";
+import FormControlLabel from "@mui/material/FormControlLabel";
+import { Link } from "react-router-dom";
+```
+
+I will explain each component as we use it, so for now just paste the list of imports at the top.
+
+### The CreateRoom function
+
+First, we want a variable to hold the default amount of votes to skip. You cna choose whatever number you want here, I went with 1. All of this code will be in the CreateRoom function.
+
+```javascript
+defaultVotes = 1;
+```
+
+One thing we don't need is the render() function wrapping our return statement like in Tim's video. The functional components handle all that for us, and it gets rendered at the very end inside App.js.
+
+Start the return statement.
+```javascript
+return (
+        <Grid container spacing={1}>
+
+        </Grid>
+    );
+```
+
+The Grid component is similar to flexbox in CSS, and will hold all of our other components inside of it. The 'spacing' attribute tells the grid how far apart we want each item, and you can play around with that value until you like the look.
+
+Each Grid in a page needs at least two components. A 'Grid container', and one or more 'Grid items'. The first Grid item will be the page title.
+
+We give the Grid item an xs={12} attribute. This means that the item will span the entire Grid container. We add a Typography comonent inside, to be the page title, and lastly write the title. At the end, the full Grid should look like this.
+
+```javascript
+<Grid container spacing={1}>
+    <Grid item xs={12} align="center">
+        <Typography component="h4" variant="h4">
+            Create A Room
+        </Typography>
+    </Grid>
+</Grid>
+```
+
+Try changing the 'component' and 'variant' attributes to h1-6 and see what it does to your title.
