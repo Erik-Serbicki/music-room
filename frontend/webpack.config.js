@@ -1,8 +1,11 @@
 const path = require("path");
 const webpack = require("webpack");
 
-module.exports = {
-  entry: "./src/index.js",
+module.exports = (env, argv) => {
+  const mode = argv.mode || "development";
+
+  return {
+    entry: "./src/index.js",
   output: {
     path: path.resolve(__dirname, "./static/frontend"),
     filename: "bundle.js",
@@ -18,22 +21,13 @@ module.exports = {
       },
     ],
   },
-  devServer :{
-    compress: true,
-    port: 8000,
-    open: true,
-    hot: true,
-    publicPath:  "./static/frontend"
-  },
   optimization: {
     minimize: true,
   },
   plugins: [
     new webpack.DefinePlugin({
-      "process.env": {
-        // This has effect on the react lib size
-        NODE_ENV: JSON.stringify("production"),
-      },
+      'process.env.NODE_ENV' : JSON.stringify(mode)
     }),
   ],
+  }
 };
