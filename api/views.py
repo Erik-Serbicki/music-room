@@ -16,7 +16,7 @@ class CreateRoomView(APIView):
     # Send a post request
     def post(self, request, format=None):
         # Does the session exist? If not, let's create one
-        if not self.equest.session.exists(self.request.session.session_key):
+        if not self.request.session.exists(self.request.session.session_key):
             self.request.session.create()
         
         # Send data to the serailzer to be translated into python code
@@ -41,13 +41,13 @@ class CreateRoomView(APIView):
                 # Save the room, tell it which fields we are updating
                 room.save(update_fields=['guest_can_pause', 'votes_to_skip'])
                 # Return the room in our HTTP response
-                return Response(models.RoomSerializer(room).data, status=status.HTTP_200_OK)
+                return Response(serializers.RoomSerializer(room).data, status=status.HTTP_200_OK)
             else:
                 # Create new room
                 room = models.Room(host=host, guest_can_pause=guest_can_pause, votes_to_skip=votes_to_skip)
                 room.save()
                 # Return the room in our HTTP response
-                return Response(models.RoomSerializer(room).data, status=status.HTTP_201_CREATED)
+                return Response(serializers.RoomSerializer(room).data, status=status.HTTP_201_CREATED)
             
         # This should only return if our inputs are bad    
         return Response({'Error':"Input not valid"}, status=status.HTTP_400_BAD_REQUEST)

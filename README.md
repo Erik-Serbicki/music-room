@@ -718,3 +718,88 @@ urlpatterns = [
 
 Now you should be able to navigate to '/', '/join', and '/create' and see your pages!
 
+## Tutorial Five - POST Requests
+
+https://www.youtube.com/watch?v=k6ELzQgPHMM&list=PLzMcBGfZo4-kCLWnGmK0jUBmGLaJxvi4j&index=5
+
+### API View
+
+We are now going to create the backend view that will let users create new rooms.
+
+Start by navigation to api/serializers.py and add a new serializer, this time to create a room. Add the CreaeRoomSerializer class to the file.
+
+```python
+class CreateRoomSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.Room
+        fields = ('guest_can_pause', 'votes_to_skip')
+```
+
+Note that the only fields we have in this serializer are the fields that the user will change, and aren't auto generated. We don't need to POST the code, or host, because we create those in the backend already. We only need to POST the fields the user can access and change from the webpage.
+
+Next, go to api/views.py and add these imports.
+
+```python
+from rest_framework import generics, status
+from rest_framework.views import APIView
+from rest_framework.response import Response
+```
+
+These imports will allow us to create a custom Response with a specified HTTP status code.
+
+Add CreateRoomView class. Here, we will finally generate the host field, wich will be the session key of the user.
+
+```python
+class CreateRoomView(APIView):
+    # Define which serializer we want to use
+    serializer_class = serializers.CreateRoomSerializer
+    
+    # Send a post request
+    def post(self, request, format=None):
+        # Does the session exist? If not, let's create one
+        if not self.request.session.exists(self.request.session.session_key):
+            self.request.session.create()
+        
+        # Send data to the serailzer to be translated into python code
+        serializer = self.serializer_class(data=request.data)
+        # Is the data valid?
+        if serializer.is_valid():
+            # Set the model values to the data from the webpage
+            guest_can_pause = serializer.data.get("guest_can_pause")
+            votes_to_skip = serializer.data.get("votes_to_skip")
+            host = self.request.session.session_key
+            
+            # If the session does already exist, we want to update the existing fields, not create new ones
+            
+            # Returns a list of rooms that satisfy the filter
+            queryset = models.Room.objects.filter(host=host)
+            if queryset.exists():
+                # There will only be one item in the list, but we still need to get just that item
+                room = queryset[0]
+                # Set the values
+                room.guest_can_pause = guest_can_pause
+                room.votes_to_skip = votes_to_skip
+                # Save the room, tell it which fields we are updating
+                room.save(update_fields=['guest_can_pause', 'votes_to_skip'])
+                # Return the room in our HTTP response
+                return Response(serializers.RoomSerializer(room).data, status=status.HTTP_200_OK)
+            else:
+                # Create new room
+                room = models.Room(host=host, guest_can_pause=guest_can_pause, votes_to_skip=votes_to_skip)
+                room.save()
+                # Return the room in our HTTP response
+                return Response(serializers.RoomSerializer(room).data, status=status.HTTP_201_CREATED)
+            
+        # This should only return if our inputs are bad    
+        return Response({'Error':"Input not valid"}, status=status.HTTP_400_BAD_REQUEST)
+```
+
+The only thing I have added here is the final return statement, which is not 100% necessary but I like to have it. Dont forget to add this view to api/urls.py as well.
+
+```python
+path('create_room', views.CreateRoomView.as_view()),
+```
+
+Now, when you navigate to api/create_room/, you should be able to change the values of votes_to_pause, and guest_can_skip, and see the changes update on screen.
+
+And you can still go to api/room/ at any point to see a list of all the rooms you have created. 
