@@ -1006,4 +1006,15 @@ The main difference here is that we don't want the actual 'e.target.value', beca
 
 ### CreateRoom Function
 
-For now, we will just make the onClick event print out to the console. Later, it will go to a new page.
+For now, we will just make the onClick event print out the state to the console. Later, it will go to a new page.
+
+```javascript
+function handleRoomButtonPressed(){
+    console.log(state)
+}
+```
+
+In the Button properties, add 'onClick={handleRoomButtonPressed}'. Now, when you go to your webpage, on Chrome you can right click and 'Inspect Element' to open up the console (should be at the bottom, below the html view). If you don't see it, next to the 'Elemnts' tab is the 'Console' tab, so you can look at it there too. 
+
+When you click the CreateRoom button, you should see the print out in the console. You can update the values on the page, click CreateRoom again, and should see the changes reflected in the console. 
+

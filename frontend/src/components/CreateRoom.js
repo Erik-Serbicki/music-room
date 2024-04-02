@@ -13,27 +13,45 @@ import { useState } from "react";
 
 
  export default function CreateRoom(){
+    // Default amount of votes to skip a song
     const defaultVotes = 1;
     
+    // Create state and setState for the data we want to send
     const [state, setState] = useState({
         guestCanPause: true, 
         votesToSkip: defaultVotes
     });
 
+    // Call this function when we change the TextField
     function handleVotesChange(e){
         setState(prevState => ({
             ...prevState, votesToSkip: e.target.value,
         }));
     };
 
+    // Call this function when we change the RadioGroup
     function handleGuestChange(e){
         setState(prevState => ({
             ...prevState, guestCanPause: e.target.value === "true" ? true : false,
         }));
     };
 
+    // When we click the CreateRoom button, send data to api/create_room, and print out the response
     function handleRoomButtonPressed(){
-        console.log("Room Created!")
+        // Set the options for the request: method, content type, and actual data in the body
+        const requestOptions = {
+            method: "POST",
+            headers: {"Content-Type" : "application/json"},
+            body: JSON.stringify({
+                votes_to_skip: state.votesToSkip,
+                guest_can_pause: state.guestCanPause,
+            }),
+        };
+
+        // fetch to the endpoint we want, take the response we get, and print out the data from that response
+        fetch("/api/create_room", requestOptions).then( 
+            (response) => response.json()).then(
+            (data) => console.log(data));
     }
 
     return (
