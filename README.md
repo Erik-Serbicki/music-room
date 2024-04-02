@@ -953,3 +953,57 @@ Lastly, we will make two buttons. The first to submit the data, and the second t
 The variant can be any button variant built in to MaterialUI. You can look up the documentation, but a quick alternative to "contained" is "outlined" if you want to play around with it. 
 
 We will later add onClick events to the create room button, and statuses to the text field and radio group, but for now we have got the basic components on the page.
+
+### Hooks
+The main difference between using class based components and using funstional components are Hooks. 
+
+Per the React documentation, "Hooks are special functions that are only available while React is rendering (which we’ll get into in more detail on the next page). They let you “hook into” different React features." Anything starting with 'use', that you need to import is a Hook. And they cannot be used by class based components, only functional components.
+
+We will use the "useState" Hook, to keep track of changes happening on our page. First, import it at the top.
+
+```javascript
+import { useState } from "react";
+```
+
+The setup and use of useState will look similar to this.state that Tim uses. First, create the state.
+
+```javascript
+const [state, setState] = useState({
+        guestCanPause: true, 
+        votesToSkip: defaultVotes
+    });
+```
+
+Write this just under the defaultVotes variable, this is all in the CreateRoom function. Here, I define a state name 'state' anda function 'setState'. This function name can by anything. I set it equal to useState, and put the data as an object. Now, when I want the data to change, I can call the setState function, and change the data.
+
+Even though objects are technically mutable, in React they should be treated as immutable. So instead of directly changing the data, we need to make a new object. Here is the function to handle changing the number of votes to skip.
+
+```javascript
+function handleVotesChange(e){
+    setState(prevState => ({
+        ...prevState, votesToSkip: e.target.value,
+    }));
+};
+```
+
+Again, this is below the previous code, but above the return statement. The variable 'e' can also be named otherwise. It will just be whatever data is returned from the component that we attach the function to. Next, I call the setState function, and update it. Notice I am not changing 'state' directly.
+
+The '...' just means that all the data that was in the object, I want to stay there. I only want to change the votesToSkip. This is very useful when you need to change some items of the object, but want others to stay the same. Otherwise, we would have to rewrite the guestCanPause variable each time we change votesToSkip. Lastly, I change the votesTOSkip variable to be 'e.target.value', which is the actual value returned from the TextField component.
+
+To hook it up to the TextField, add `onChange={handleVotesChange}` to its list of properties.
+
+The function for handling guest can pause change is very similar.
+
+```javascript
+function handleGuestChange(e){
+    setState(prevState => ({
+        ...prevState, guestCanPause: e.target.value === "true" ? true : false,
+    }));
+};
+```
+
+The main difference here is that we don't want the actual 'e.target.value', because the RadioGroup component returns a string. Instead, we add the inline if statement to check what the string is, and assign an actual boolean value to guestCanPause based on that. Dont forget to add `onChange={handleGuestChange}` to the properties of the RadioGroup component.
+
+### CreateRoom Function
+
+For now, we will just make the onClick event print out to the console. Later, it will go to a new page.

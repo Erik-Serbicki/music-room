@@ -32,6 +32,10 @@ import { useState } from "react";
         }));
     };
 
+    function handleRoomButtonPressed(){
+        console.log("Room Created!")
+    }
+
     return (
         <Grid container spacing={1}>
             <Grid item xs={12} align="center">
@@ -66,7 +70,7 @@ import { useState } from "react";
                 </FormControl>
             </Grid>
             <Grid item xs={12} align="center">
-                <Button color="primary" variant="outlined">Create a Room</Button>
+                <Button color="primary" variant="outlined" onClick={handleRoomButtonPressed}>Create a Room</Button>
             </Grid>
             <Grid item xs={12} align="center">
                 <Button color="secondary" variant="outlined" to="/" component={Link}>Back</Button>
