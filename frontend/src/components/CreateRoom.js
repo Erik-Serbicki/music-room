@@ -39,10 +39,10 @@ import { Link } from "react-router-dom";
                 </FormControl>
             </Grid>
             <Grid item xs={12} align="center">
-                <Button color="primary" variant="contained">Create a Room</Button>
+                <Button color="primary" variant="outlined">Create a Room</Button>
             </Grid>
             <Grid item xs={12} align="center">
-                <Button color="secondary" variant="contained">Back</Button>
+                <Button color="secondary" variant="outlined" to="/" component={Link}>Back</Button>
             </Grid>
         </Grid>
     );

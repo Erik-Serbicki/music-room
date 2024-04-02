@@ -874,3 +874,82 @@ We give the Grid item an xs={12} attribute. This means that the item will span t
 ```
 
 Try changing the 'component' and 'variant' attributes to h1-6 and see what it does to your title.
+
+The game plan now is to make a bunch of `<Grid item>` components, each one representing something we want on our page. These will be: radio buttons to choose if guests can pause, a text field to type in the votes to skip, and two buttons, one to go back to the home page, and one to submit the data. Let's go!
+
+Firt, copy and paste the grid item you have, and get rid of the typography component. 
+
+Every time we want data to be sent, whatever component we have needs to be inside a FormControl component.
+
+```javascript
+<FormControl component="fieldset">
+
+</FormControl>
+```
+
+We can put some text in there to be the big label for the buttons.
+
+```javascript
+<FormHelperText>
+    Guest Control of Playback State
+</FormHelperText>
+```
+
+Underneath that, but still within the form control, we can finally put the Radio buttons.
+
+```javascript
+<RadioGroup row defaultValue={true}>
+    <FormControlLabel value={true} control={<Radio color="primary" />} label="Play/Pause" labelPlacement="bottom"/>
+    <FormControlLabel value={false} control={<Radio color="secondary" />} label="No Control" labelPlacement="bottom"/>
+</RadioGroup>
+```
+
+The full grid item should be structured like this:
+
+```javascript
+<Grid item xs={12} align="center">
+    <FormControl component="fieldset">
+        <FormHelperText>
+            Guest Control of Playback State
+        </FormHelperText>
+        <RadioGroup row defaultValue={true}>
+            <FormControlLabel value={true} control={<Radio color="primary" />} label="Play/Pause" labelPlacement="bottom"/>
+            <FormControlLabel value={false} control={<Radio color="secondary" />} label="No Control" labelPlacement="bottom"/>
+        </RadioGroup>
+    </FormControl>
+</Grid>
+```
+
+Now, let's move on to the text field, where we can input the votes to skip.
+
+Quick note: if you get the error: "<div> cannot appear as descendant of <p>", this is because by default, some of the MaterialUI components are tagged as <p>. So, if you try to put a <div> inside of it, you will get that error. A fix is to set the component type `component="span"`, or `component="div"`. I like span, because it comes with no formatting of its own. 
+
+Sometimes, the formatting works for me without needing a div element, like with the FormHelperText for the radio buttons. However, for the text field, I needed the div element to align the text to the center of the input box.
+
+```javascript
+<Grid item xs={12} align="center">
+    <FormControl>
+        <TextField required={true} type="number" defaultValue={defaultVotes} inputProps={{min:1, style:{textAlign: "center"}}}/>
+        <FormHelperText component="span"><div align="center">Votes Required to Skip</div></FormHelperText>
+    </FormControl>
+</Grid>
+```
+
+Without `component="span"` in the FormHelperText, you will get the error.
+
+In the options for the TextField, we set the type, if its required or not, the efault value, and the inputProps, which lets us add an object with extra properties (note the double curly brackets). Inside, we specify the minimum value, and the text align, so that the number is in the middle of the text field.
+
+Lastly, we will make two buttons. The first to submit the data, and the second to go back to the home page.
+
+```javascript
+<Grid item xs={12} align="center">
+    <Button color="primary" variant="contained">Create a Room</Button>
+</Grid>
+<Grid item xs={12} align="center" >
+    <Button color="secondary" variant="contained" to="/" component={Link}>Back</Button>
+</Grid>
+```
+
+The variant can be any button variant built in to MaterialUI. You can look up the documentation, but a quick alternative to "contained" is "outlined" if you want to play around with it. 
+
+We will later add onClick events to the create room button, and statuses to the text field and radio group, but for now we have got the basic components on the page.
