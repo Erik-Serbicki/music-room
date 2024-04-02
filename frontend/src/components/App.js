@@ -4,10 +4,10 @@ import { createRoot } from "react-dom/client";
 
 export default function App()
 {
-    return (
+    return ( 
         <div>
             <HomePage />
-        </div>
+        </div>  
     );
 }
 
