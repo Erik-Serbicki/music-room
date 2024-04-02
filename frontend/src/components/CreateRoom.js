@@ -17,7 +17,7 @@ import { Link } from "react-router-dom";
     return (
         <Grid container spacing={1}>
             <Grid item xs={12} align="center">
-                <Typography component="h4" variant="h2">
+                <Typography component="h2" variant="h2">
                     Create A Room
                 </Typography>
             </Grid>
@@ -30,6 +30,12 @@ import { Link } from "react-router-dom";
                         <FormControlLabel value={true} control={<Radio color="primary" />} label="Play/Pause" labelPlacement="bottom"/>
                         <FormControlLabel value={false} control={<Radio color="secondary" />} label="No Control" labelPlacement="bottom"/>
                     </RadioGroup>
+                </FormControl>
+            </Grid>
+            <Grid item xs={12} align="center">
+                <FormControl>
+                    <TextField required={true} type="number" defaultValue={defaultVotes} inputProps={{min:1, style:{textAlign: "center"}}}/>
+                    <FormHelperText component="span"><div align="center">Votes Required to Skip</div></FormHelperText>
                 </FormControl>
             </Grid>
         </Grid>
