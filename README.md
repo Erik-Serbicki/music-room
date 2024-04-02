@@ -447,8 +447,11 @@ Next, create webpack.config.js
 const path = require("path");
 const webpack = require("webpack");
 
-module.exports = {
-  entry: "./src/index.js",
+module.exports = (env, argv) => {
+  const mode = argv.mode || "development";
+
+  return {
+    entry: "./src/index.js",
   output: {
     path: path.resolve(__dirname, "./static/frontend"),
     filename: "[name].js",
@@ -469,25 +472,25 @@ module.exports = {
   },
   plugins: [
     new webpack.DefinePlugin({
-      "process.env": {
-        // This has effect on the react lib size
-        NODE_ENV: JSON.stringify("production"),
-      },
+      'process.env.NODE_ENV' : JSON.stringify(mode)
     }),
   ],
+  }
 };
 ```
 
-This config code tells webpack where to find the javascript files, and where to bundle them to. It will only work if you have named the directories the same, so if you changed them earlier, change them here too.
+This config file tells webpack where to find the javascript files, and where to bundle them to. It will only work if you have named the directories the same, so if you changed them earlier, change them here too. My config file looks a bit different than Tim's. This is to get around a warning that appeared everytime I ran `npm run dev`, that said "Conflicting values for process.env.Node_ENV". This error shows up if you have defined the run mode (in this case 'dev') in the package.json, but the mode in the webpack config file says production. It is not the end of the world if you see that error, your code will still run fine. However, I wrapped the config in a function, so that the mode would change depending on which mode was run in the command line. That way, both dev and production match up.
 
 Lastly, we will go the package.json and add two scripts, one to run for development, and one to run for production.
 
 ```javascript
 "scripts": {
-    "dev": "webpack --mode development --watch",
+    "dev": "webpack watch --mode development",
     "build": "webpack --mode production"
   },
 ```
+
+For the newer version of webpack I am using, the 'watch' needs to go before '--mode'.
 
 ### Creating Our First Page
 
@@ -574,10 +577,13 @@ export default function App()
 Show the component on the html page:
 ```javascript
 const appDiv = document.getElementById("app");
-render(<App />, appDiv);
+const root = createRoot(appDiv);
+root.render(< App tab="home"/>);
 ```
 
-This is the beginning of the main divergence between this project and Tim's version. This is a functinoal components, as opposed to a class based component as shown in the video. You can see the imports are a little different, and the component itself is much simpler. 
+This is the beginning of the main divergence between this project and Tim's version. This is a functinoal component, as opposed to the class based component shown in the video. You can see the imports are a little different, and the component itself is much simpler.
+
+In addition, react-dom 'render' has been replaced by 'createRoot'. You can still use render if you would like, but you'll get an warning telling you its been deprecated.
 
 Last couple things: first, we need to add App to the index.js.
 ```javascript
@@ -837,7 +843,7 @@ I will explain each component as we use it, so for now just paste the list of im
 First, we want a variable to hold the default amount of votes to skip. You cna choose whatever number you want here, I went with 1. All of this code will be in the CreateRoom function.
 
 ```javascript
-defaultVotes = 1;
+const defaultVotes = 1;
 ```
 
 One thing we don't need is the render() function wrapping our return statement like in Tim's video. The functional components handle all that for us, and it gets rendered at the very end inside App.js.

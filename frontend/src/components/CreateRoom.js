@@ -18,7 +18,7 @@ import { Link } from "react-router-dom";
         <Grid container spacing={1}>
             <Grid item xs={12} align="center">
                 <Typography component="h4" variant="h4">
-                    Create A Room
+                    Create A Music Room
                 </Typography>
             </Grid>
         </Grid>
