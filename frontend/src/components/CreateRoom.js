@@ -38,6 +38,12 @@ import { Link } from "react-router-dom";
                     <FormHelperText component="span"><div align="center">Votes Required to Skip</div></FormHelperText>
                 </FormControl>
             </Grid>
+            <Grid item xs={12} align="center">
+                <Button color="primary" variant="contained">Create a Room</Button>
+            </Grid>
+            <Grid item xs={12} align="center">
+                <Button color="secondary" variant="contained">Back</Button>
+            </Grid>
         </Grid>
     );
 }
