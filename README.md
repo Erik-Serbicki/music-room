@@ -1049,3 +1049,47 @@ https://www.youtube.com/watch?v=H9rHrlNTpq8&list=PLzMcBGfZo4-kCLWnGmK0jUBmGLaJxv
 
 If everything has gone smoothly, we should now have all the ract components for our Create Room page working, and if we submut the form, the data will get sent correctly to the api endpoint. The next step is to actually create a new Room, using the data from the api endpoint.
 
+### Creating the Room component
+
+First, we will create a new Javscript component to be the Room page. In the components folder, create Room.js.
+
+Write the usual import statement, and create a new functional component.
+
+```javascript
+import React from 'react'
+
+export default function Room(){
+    
+}
+```
+
+Next, lets define the state for this page. Again, I use the useState() hook, and this time one new variable is added to the object to keep track of the Room's host.
+
+```javascript
+ const [state, setState] = useState({
+        guestCanPause: true, 
+        votesToSkip: 1,
+        isHost: false
+    });
+```
+
+The default values here do not matter, because we will be overriding them in every single case, as our website will only naviagte to the room if one has already been created. 
+
+For now, let's also add a basic return with some paragraphs to display the state data.
+
+```javascript
+return (
+        <div>
+            <p>Votes: {state.votesToSkip}</p>
+            <p>Guest can pause: {state.guestCanPause}</p>
+            <p>Host: {state.isHost}</p>
+        </div>
+    );
+```
+
+Eventually we will change this, but for now we want to focus on how we get to this page, not what the actual contents are.
+
+## How to get to the Room page
+
+There are many different ways to handle this, but for this project we will be using the room code in the url. Most simlar websites like Jackbox.tv or GarticPhone, where one person hosts and many people can join these rooms, use a similar method, although most of the time code is used on a Join page url and not the room lobby. In our case, the room lobby url will include the unique code. 
+
