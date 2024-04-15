@@ -1093,3 +1093,12 @@ Eventually we will change this, but for now we want to focus on how we get to th
 
 There are many different ways to handle this, but for this project we will be using the room code in the url. Most simlar websites like Jackbox.tv or GarticPhone, where one person hosts and many people can join these rooms, use a similar method, although most of the time code is used on a Join page url and not the room lobby. In our case, the room lobby url will include the unique code. 
 
+Step 1 is to add a Route to the Home page. 
+
+```javascript
+import Room from "./Room";
+
+<Route path='room/:roomCode' element={<Room/>} />
+```
+
+Here, the colon in the path string indicates a parameter that can change.
