@@ -1018,3 +1018,34 @@ In the Button properties, add 'onClick={handleRoomButtonPressed}'. Now, when you
 
 When you click the CreateRoom button, you should see the print out in the console. You can update the values on the page, click CreateRoom again, and should see the changes reflected in the console. 
 
+### Sending Data to the Backend
+
+Now, instead of just printing out the state, lets send the data to our api endpoint. We need two things in the function: the request options, so all the data we are sending over, as well as the request method and content type, and then we need to actually send the request to the endpoint we want.
+
+```javascript
+// Set the options for the request: method, content type, and actual data in the body
+const requestOptions = {
+    method: "POST",
+    headers: {"Content-Type" : "application/json"},
+    body: JSON.stringify({
+        votes_to_skip: state.votesToSkip,
+        guest_can_pause: state.guestCanPause,
+    }),
+};
+```
+
+These are our request options. The method is POST, the content type is JSON, and the body hold the actual data we want to send. We are using JSON.stringify to turn the object into a string in JSON format.
+
+Next, we send a fetch request because we will want to print out the data to the console.
+```javascript
+fetch("/api/create_room", requestOptions).then( (response) => response.json()).then((data) => console.log(data));
+```
+
+You could format that into more than one long line of code if you like. But here we say what endpoint we want, in this case api/create_room, and then we take the response, grab the data, then print it to the console. If it works, once you click the create room button you will see the full room object printed out in the console, which is what our CreateRoomView returns. 
+
+## Tutorial Seven - Calling API Endpoints With React
+
+https://www.youtube.com/watch?v=H9rHrlNTpq8&list=PLzMcBGfZo4-kCLWnGmK0jUBmGLaJxvi4j&index=7
+
+If everything has gone smoothly, we should now have all the ract components for our Create Room page working, and if we submut the form, the data will get sent correctly to the api endpoint. The next step is to actually create a new Room, using the data from the api endpoint.
+

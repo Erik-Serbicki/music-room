@@ -1,5 +1,5 @@
 from django.db import models
-import random
+import random 
 import string
 
 # Generate a code, check if it exists already, reapeat
