@@ -1,11 +1,12 @@
 import React from 'react'
 
-export default function Room(){
+export default function Room({roomCode}){
     const [state, setState] = useState({
         guestCanPause: false, 
         votesToSkip: 1,
         isHost: false
     });
+    code = roomCode;
 
     return (
         <div>

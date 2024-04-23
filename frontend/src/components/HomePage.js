@@ -11,7 +11,7 @@ export default function HomePage(){
                 <Route path="/" element={<p>This is the home page</p>} />
                 <Route path="/join" element={<JoinRoom />} />
                 <Route path="/create" element={<CreateRoom />} />
-                <Route path='room/:roomCode' element={<Room/>} />
+                <Route path='room/:roomCode' element={<Room roomCode={code}/>} />
             </Routes>
         </Router>
     );
