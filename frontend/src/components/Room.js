@@ -1,18 +1,21 @@
 import React from 'react'
+import { useState } from 'react';
+import { useParams } from 'react-router-dom';
 
-export default function Room({roomCode}){
+export default function Room(){
     const [state, setState] = useState({
         guestCanPause: false, 
         votesToSkip: 1,
         isHost: false
     });
-    code = roomCode;
+
+    let { roomCode } = useParams();
 
     return (
         <div>
             <p>Votes: {state.votesToSkip}</p>
-            <p>Guest can pause: {state.guestCanPause}</p>
-            <p>Host: {state.isHost}</p>
+            <p>Guest can pause: {state.guestCanPause.toString()}</p>
+            <p>Host: {state.isHost.toString()}</p>
         </div>
     );
 }

@@ -1102,3 +1102,4 @@ import Room from "./Room";
 ```
 
 Here, the colon in the path string indicates a parameter that can change.
+
