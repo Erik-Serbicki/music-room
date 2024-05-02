@@ -669,6 +669,8 @@ import HomePage from "./HomePage";
 
 Everything else can stay the same. Here, we are just telling our App function to return the HomePage component, which will have the navigation to our other pages built in to it.
 
+My Home page also looks different than Tim's. In the most recent version of React Router, we don't want to nest the router components like he does in the video. If you still wanted to be able to follow the video anyway, the syntax itself is different. Below is the code you need to write to follow along as close to the video as possible, but with the new syntax.
+
 HomePage.js:
 
 ```javascript
@@ -689,8 +691,49 @@ export default function HomePage(){
     );
 }
 ```
+However, doing it this way will cause your web app to be slower than it could be. The reason is that each nested Route has its own fetch call. So, when we load a page, ALL of the fetch calls need to happen before the page is resolved. The way it was explained to me in the first paragraph of the first blog post I read about the topic (you are welcome for doing your Googling for you), quick example is this: if our page needs three fetch calls, and each takes one second, the old way of structuring the page will make the loading time three seconds. Each call needs to complete one after the other. Doing it the reccomened way though, each call can happen at the same time, so it would only take one second total, and do the three fetch calls at the same time.
 
-The Router component from react-router-dom allows us to provide navigation to other components based on a url endpoint. Notice that for the home page, we don't add the 'exact' keyword like in the video. The Route component now has that excact functionality by default, so we don't need to specify it anymore. 
+I encourage you to use this second method, because most of the documentation I could find does it like that. So, the better way is to define all of the Routes outside of the React componenets call in the return statement. I used createBrowserRouter to define a router variable, and then inside the return I used RouterProvider with that router variable. This was the most common method I saw from looking at documentation.
+
+First, the new import:
+```javascript
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
+```
+
+Next, the router variable, which uses createBrowserRouter, and holds a list of all the Route objects we want. This is still inside the HomePage function, just not inside the return statement.
+
+```javascript
+const router = createBrowserRouter([
+        {
+            path: "/",
+            element: <p>This is the home page</p>,
+        },
+        {
+            path: "/create",
+            element: <CreateRoom />,
+        },
+        {
+            path: "/join",
+            element: <JoinRoom />,
+        },
+        {
+            path: "/room",
+            element: <Room />,
+        },
+    ])
+```
+
+Each Route object has many paramaters you can change, I found that these two were all I needed to get the pages up and running, but in practice there would be other things we would want to put there, which we will do later.
+
+Lastly, in the return statement, we have the RouterProvider component.
+
+```javascript
+return(
+        <RouterProvider router={router} />
+    );
+```
+
+Now we can create the other pages.
 
 JoinRoom.js:
 
@@ -1097,9 +1140,37 @@ Step 1 is to add a Route to the Home page.
 
 ```javascript
 import Room from "./Room";
-
-<Route path='room/:roomCode' element={<Room/>} />
 ```
 
-Here, the colon in the path string indicates a parameter that can change.
+And then add the Route object to the list in createBroswerRouter.
 
+```javascript
+{
+    path: "/room:roomCode",
+    element: <Room />,
+},
+```
+
+Here, the colon in the path string indicates a parameter that can change. These are called 'dynamic segments', and are passed automatically to the element in the form of 'params'. To access the params, in the Room.js file we need to use the useParams hook. 
+
+```javascript
+import { useParams } from 'react-router-dom';
+```
+
+After the useState hook, I put the useeParams hook.
+
+```javascript
+let { roomCode } = useParams();
+```
+
+useParams returns an object with key value pairs of all of the dynamic parameters from the url, so this will grab the string that goes with with the roomCode key, i.e. the room code. Let's display that on the screen for now.
+
+```javascript
+<h2>{roomCode}</h2>
+```
+
+Don't forget that before we can navigate here, we need to add the url into the urls.py in the frontend folder where we put /create and /join. 
+
+```python
+path('room/<str:roomCode>', views.index)
+```

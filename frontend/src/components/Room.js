@@ -13,6 +13,7 @@ export default function Room(){
 
     return (
         <div>
+            <h2>{roomCode}</h2>
             <p>Votes: {state.votesToSkip}</p>
             <p>Guest can pause: {state.guestCanPause.toString()}</p>
             <p>Host: {state.isHost.toString()}</p>
