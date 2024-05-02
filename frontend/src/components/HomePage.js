@@ -21,7 +21,7 @@ export default function HomePage(){
             element: <JoinRoom />,
         },
         {
-            path: "/room:roomCode",
+            path: "/room/:roomCode",
             element: <Room />,
         },
     ])

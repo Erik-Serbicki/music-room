@@ -1146,7 +1146,7 @@ And then add the Route object to the list in createBroswerRouter.
 
 ```javascript
 {
-    path: "/room:roomCode",
+    path: "/room/:roomCode",
     element: <Room />,
 },
 ```
@@ -1174,3 +1174,5 @@ Don't forget that before we can navigate here, we need to add the url into the u
 ```python
 path('room/<str:roomCode>', views.index)
 ```
+
+To view this, if you remember a room code you have already created you can go to room/roomCode, or if not, go to api/room first, and see the list of all the created rooms. You can copy paste a room code from there.
