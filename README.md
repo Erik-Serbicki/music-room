@@ -1253,8 +1253,14 @@ function getRoomDetails(){
 Don't forget to call the function.
 
 ```javascript
-getRoomDetails();
+import { useEffect } from 'react';
+
+useEffect(() => {
+        getRoomDetails();
+    }, []);
 ```
+
+
 
 The page state should now successfully update, so if you go to room/code, the data now matches the room and is no longer the default values.
 
@@ -1262,7 +1268,6 @@ The page state should now successfully update, so if you go to room/code, the da
 
 Lastly for this section, we don't want to have to manually type in the url to go to the room, so let's make the create room page send us to the room once we have made it. Later we will make the room join page to let us join an already created room.
 
-TODO: Fix this section (seemingly endless reloading)
 
 Add useNavigate hook, change console.log() to navigate to the right url.
 

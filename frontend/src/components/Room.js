@@ -1,6 +1,7 @@
 import React from 'react'
 import { useState } from 'react';
 import { useParams } from 'react-router-dom';
+import { useEffect } from 'react';
 
 export default function Room(){
     const [state, setState] = useState({
@@ -10,6 +11,10 @@ export default function Room(){
     });
 
     let { roomCode } = useParams();
+
+    useEffect(() => {
+        getRoomDetails();
+    }, []);
 
     function getRoomDetails(){
         fetch(`/api/get-room?code=${roomCode}`).then((response)=>
@@ -23,8 +28,6 @@ export default function Room(){
             }));
         });
     }
-
-    getRoomDetails();
 
     return (
         <div>
