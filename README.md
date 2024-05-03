@@ -631,7 +631,6 @@ html, body {
 #app{
     width: 100%;
     height: 100%;
-    display: flex;
 }
 ```
 
@@ -867,15 +866,7 @@ Go to frontend/CreateRoom.js
 
 Big 'ol list of imports:
 ```javascript
-import Button from "@mui/material/Button";
-import Grid from "@mui/material/Grid";
-import Typography from "@mui/material/Typography";
-import TextField from "@mui/material/TextField";
-import FormHelperText from "@mui/material/FormHelperText";
-import FormControl from "@mui/material/FormControl";
-import Radio from "@mui/material/Radio";
-import RadioGroup from "@mui/material/RadioGroup";
-import FormControlLabel from "@mui/material/FormControlLabel";
+import { Button, Grid, Typography, TextField, FormHelperText, FormControl, Radio, RadioGroup, FormControlLabel } from "@mui/material";
 import { Link } from "react-router-dom";
 ```
 
@@ -1132,7 +1123,7 @@ return (
 
 Eventually we will change this, but for now we want to focus on how we get to this page, not what the actual contents are.
 
-## How to get to the Room page
+### How to get to the Room page
 
 There are many different ways to handle this, but for this project we will be using the room code in the url. Most simlar websites like Jackbox.tv or GarticPhone, where one person hosts and many people can join these rooms, use a similar method, although most of the time code is used on a Join page url and not the room lobby. In our case, the room lobby url will include the unique code. 
 
@@ -1260,7 +1251,7 @@ useEffect(() => {
     }, []);
 ```
 
-
+The useEffect hook is very useful in ways I will not get into here, but for now we need to use it so that our getRoomDetails() function only runs once. If we called it without the useEffect() hook the page would keep reloading as the state updates, which we don't need. We only need one fetch request to get the room details.
 
 The page state should now successfully update, so if you go to room/code, the data now matches the room and is no longer the default values.
 
@@ -1280,4 +1271,39 @@ fetch("/api/create-room", requestOptions).then(
             (response) => response.json()).then(
             (data) =>  navigate("/room/" + data.code))
 ```
+
+## Tutorial Eight - The Join Room Page
+
+https://www.youtube.com/watch?v=2i6FeATm9ZY&list=PLzMcBGfZo4-kCLWnGmK0jUBmGLaJxvi4j&index=8
+
+### Cleaning up the create room page
+
+First, let's center up everything in the create room page. Tim does this in the CSS in the video, you could also use material components in the react page instead. The choice is up to you. I will stick as close to the videos as I can, and so will do this in CSS as well.
+
+Keep in mind the frontend here is not the 'best' way of doing things. If you are more competent in frontend either in CSS or material ui, do it your way instead. I want to make this guide easy to follow along with for someone watching the videos, so I will stick with what Tim does. 
+
+```css
+.center{
+    position: absolute;
+    top: 40%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+```
+
+He creates a new class, and adds some properties so that anything with that class applied to it will be centered relative to its parent.
+
+Once you add this, hop over to App.js and give the div the class.
+
+```javascript
+return ( 
+        <div className="center">
+            <HomePage />
+        </div>   
+    );
+```
+
+Now, we should have our grid centered in the window.
+
+### The Join Room Page
 

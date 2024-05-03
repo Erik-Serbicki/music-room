@@ -1,15 +1,7 @@
 import React, { useEffect } from "react";
-import Button from "@mui/material/Button";
-import Grid from "@mui/material/Grid";
-import Typography from "@mui/material/Typography";
-import TextField from "@mui/material/TextField";
-import FormHelperText from "@mui/material/FormHelperText";
-import FormControl from "@mui/material/FormControl";
-import Radio from "@mui/material/Radio";
-import RadioGroup from "@mui/material/RadioGroup";
-import FormControlLabel from "@mui/material/FormControlLabel";
 import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react"; 
+import { Button, Grid, Typography, TextField, FormHelperText, FormControl, Radio, RadioGroup, FormControlLabel } from "@mui/material";
 
  export default function CreateRoom(){
     // Default amount of votes to skip a song
@@ -56,13 +48,13 @@ import { useState } from "react";
     }
 
     return (
-        <Grid container spacing={1}>
-            <Grid item xs={12} align="center">
+        <Grid container rowSpacing={3} >
+            <Grid item xs={12} align={"center"} >
                 <Typography component="h2" variant="h2">
                     Create A Room
                 </Typography>
             </Grid>
-            <Grid item xs={12} align="center">
+            <Grid item xs={12} align="center" >
                 <FormControl component="fieldset">
                     <FormHelperText>
                         Guest Control of Playback State
@@ -73,7 +65,7 @@ import { useState } from "react";
                     </RadioGroup>
                 </FormControl>
             </Grid>
-            <Grid item xs={12} align="center">
+            <Grid item xs={12} align="center" >
                 <FormControl>
                     <TextField 
                         required={true} 
@@ -88,10 +80,10 @@ import { useState } from "react";
                     <FormHelperText component="span"><div align="center">Votes Required to Skip</div></FormHelperText>
                 </FormControl>
             </Grid>
-            <Grid item xs={12} align="center">
+            <Grid item xs={12} align="center" >
                 <Button color="primary" variant="outlined" onClick={handleRoomButtonPressed}>Create a Room</Button>
             </Grid>
-            <Grid item xs={12} align="center">
+            <Grid item xs={12} align="center" >
                 <Button color="secondary" variant="outlined" to="/" component={Link}>Back</Button>
             </Grid>
         </Grid>
