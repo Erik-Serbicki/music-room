@@ -11,6 +11,21 @@ export default function Room(){
 
     let { roomCode } = useParams();
 
+    function getRoomDetails(){
+        fetch('/api/get-room' + '?code=' + roomCode).then((response)=>
+            response.json()
+        ).then((data) => {
+            setState(prevState => ({ 
+                ...prevState,
+                votesToSkip: data.votes_to_skip,
+                guestCanPause: data.guest_can_pause,
+                isHost: data.is_host,
+            }));
+        });
+    }
+
+    getRoomDetails();
+
     return (
         <div>
             <h2>{roomCode}</h2>

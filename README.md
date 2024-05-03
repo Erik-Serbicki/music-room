@@ -1224,3 +1224,9 @@ def get(self, request, format=None):
         return Response({'Room Not Found': "Invalid Room Code"}, status=status.HTTP_404_NOT_FOUND)
     return Response({"Bad Request":"No Room Input"}, status=status.HTTP_400_BAD_REQUEST)
 ```
+
+Now, go to api/urls.py and add a path for the view we just created.
+
+```python
+path('get-room', views.GetRoom.as_view())
+```
