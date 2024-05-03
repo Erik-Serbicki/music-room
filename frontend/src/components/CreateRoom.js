@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import Button from "@mui/material/Button";
 import Grid from "@mui/material/Grid";
 import Typography from "@mui/material/Typography";
@@ -8,9 +8,8 @@ import FormControl from "@mui/material/FormControl";
 import Radio from "@mui/material/Radio";
 import RadioGroup from "@mui/material/RadioGroup";
 import FormControlLabel from "@mui/material/FormControlLabel";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react"; 
-
 
  export default function CreateRoom(){
     // Default amount of votes to skip a song
@@ -21,6 +20,8 @@ import { useState } from "react";
         guestCanPause: true, 
         votesToSkip: defaultVotes
     });
+
+    const navigate = useNavigate();
 
     // Call this function when we change the TextField
     function handleVotesChange(e){
@@ -48,10 +49,10 @@ import { useState } from "react";
             }),
         };
 
-        // fetch to the endpoint we want, take the response we get, and print out the data from that response
-        fetch("/api/create_room", requestOptions).then( 
+        // fetch to the endpoint we want, take the response we get, and navigate to room page
+        fetch("/api/create-room", requestOptions).then( 
             (response) => response.json()).then(
-            (data) => console.log(data));
+            (data) =>  navigate("/room/" + data.code))
     }
 
     return (

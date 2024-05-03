@@ -1230,3 +1230,49 @@ Now, go to api/urls.py and add a path for the view we just created.
 ```python
 path('get-room', views.GetRoom.as_view())
 ```
+
+Now, if we navigate to api/get-room, we can check out a few things. First, if you just go to api/get-room, our 400 error page shows up because we did not specify a code. If we go to api/get-room?code=hello we get our 404 errror, because no room matches that code. If we replace hello with an actual room code, then we see the room details displayed. Now, we have to tell our javascript page to get the details from that endpoint.
+
+To do this, let's add a function to Room.js. This function will send a fetch request to the endpoint, and then setState to update the data.
+
+```javascript
+function getRoomDetails(){
+        fetch('/api/get-room' + '?code=' + roomCode).then((response)=>
+            response.json()
+        ).then((data) => {
+            setState(prevState => ({ 
+                ...prevState,
+                votesToSkip: data.votes_to_skip,
+                guestCanPause: data.guest_can_pause,
+                isHost: data.is_host,
+            }));
+        });
+    }
+```
+
+Don't forget to call the function.
+
+```javascript
+getRoomDetails();
+```
+
+The page state should now successfully update, so if you go to room/code, the data now matches the room and is no longer the default values.
+
+### Proper page navigation
+
+Lastly for this section, we don't want to have to manually type in the url to go to the room, so let's make the create room page send us to the room once we have made it. Later we will make the room join page to let us join an already created room.
+
+TODO: Fix this section (seemingly endless reloading)
+
+Add useNavigate hook, change console.log() to navigate to the right url.
+
+```javascript
+import { useNavigate } from "react-router-dom";
+
+const navigate = useNavigate();
+
+fetch("/api/create-room", requestOptions).then( 
+            (response) => response.json()).then(
+            (data) =>  navigate("/room/" + data.code))
+```
+
