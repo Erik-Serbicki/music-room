@@ -1176,3 +1176,51 @@ path('room/<str:roomCode>', views.index)
 ```
 
 To view this, if you remember a room code you have already created you can go to room/roomCode, or if not, go to api/room first, and see the list of all the created rooms. You can copy paste a room code from there.
+
+As of now, anything in the url will work as a room code, so we will need to add logic to make sure a room exists first. And, the printout of votes to skip etc. is still the default, so we need to send that data over as well.
+
+### Sending the rest of the data
+
+We will use a new api view to send the data, so go to views.py in the api folder and add a new class. This one will not be that complicated because the rooms are already created and stored by our other views, we just need to get the data.
+
+```python
+class GetRoom(APIView):
+```
+
+First we define our serializer, and then create a lookup that will be the room's code.
+
+```python
+serializer = serializers.RoomSerializer
+lookup_url_kwarg = 'code'
+```
+
+Next, we create the get function.
+
+```python
+def get(self, request, format=None):
+    code = request.GET.get(self.lookup_url_kwarg)
+```
+
+Here, the uppercase GET refers to an HTTP GET request, and the lowercase get looks for anything mathcing the argument in the url.
+
+Next, we check if there is a code in the url, and if so, if that code is in our list of rooms.
+
+```python
+if code != None:
+    room = models.Room.objects.filter(code=code)
+```
+
+If we find a Room with that room code, return the data and add if they are the host or not. If not, return an error. If no code is found, return a different error. The entire view should look like this:
+
+```python
+def get(self, request, format=None):
+    code = request.GET.get(self.lookup_url_kwarg)
+    if code != None:
+        room = models.Room.objects.filter(code=code)
+        if len(room) > 0:
+            data = serializers.RoomSerializer(room[0]).data
+            data['is_host'] = self.request.session.session_key == room[0].host
+            return Response(data, status=status.HTTP_200_OK)
+        return Response({'Room Not Found': "Invalid Room Code"}, status=status.HTTP_404_NOT_FOUND)
+    return Response({"Bad Request":"No Room Input"}, status=status.HTTP_400_BAD_REQUEST)
+```
