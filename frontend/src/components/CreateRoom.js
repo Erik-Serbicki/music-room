@@ -52,7 +52,7 @@ import { useState } from "react";
         // fetch to the endpoint we want, take the response we get, and navigate to room page
         fetch("/api/create-room", requestOptions).then( 
             (response) => response.json()).then(
-            (data) =>  navigate("/room/" + data.code))
+            (data) =>  navigate(`/room/${data.code}`))
     }
 
     return (

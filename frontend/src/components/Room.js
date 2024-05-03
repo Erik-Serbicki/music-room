@@ -12,7 +12,7 @@ export default function Room(){
     let { roomCode } = useParams();
 
     function getRoomDetails(){
-        fetch('/api/get-room' + '?code=' + roomCode).then((response)=>
+        fetch(`/api/get-room?code=${roomCode}`).then((response)=>
             response.json()
         ).then((data) => {
             setState(prevState => ({ 
