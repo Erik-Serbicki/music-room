@@ -17,6 +17,10 @@ export default function JoinRoom(){
         }));
     }
 
+    function roomButtonPressed(){
+        console.log(state.roomCode);
+    }
+
     return(
         <Grid container spacing={1} align="center">
             <Grid item xs={12}>
@@ -36,7 +40,7 @@ export default function JoinRoom(){
                 />
             </Grid>
             <Grid item xs={12} >
-                <Button color="primary" variant="outlined" onClick>Join Room</Button>
+                <Button color="primary" variant="outlined" onClick={roomButtonPressed}>Join Room</Button>
             </Grid>
             <Grid item xs={12} >
                 <Button color="secondary" variant="outlined" to="/" component={Link}>Back</Button>
