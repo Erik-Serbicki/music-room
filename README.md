@@ -1384,3 +1384,52 @@ onChange = {handleTextFieldChange}
 ```
 
 The 'onChange' property goes in the TextField with all the other properties. 
+
+Now we will add a function to handle the join room button being clicked. For now we will just add a console.log, but later we will add a POST request to the backend. 
+
+```javascript
+function roomButtonPressed(){
+    console.log(state.roomCode);
+}
+
+onClick={roomButtonPressed}
+```
+
+Now, before finishing the function, lets create a view in our backend to handle the POST request. 
+
+Go to api/views.py, and add a new JoinRoom view. Then, create a post method, and check if the users session already exists.
+
+```python
+def post(self, request, format=None):
+    if not self.request.session.exists(self.request.session.session_key):
+        self.request.session.create()
+```
+
+I won't go over the rest of the funciton in detail, as it is similar to what we have already done. We check to see if a code is inputted, the we check to see if that code corresponds to a room. If so, we connect, if not we return an error.
+
+```python
+class JoinRoom(APIView):
+    lookup_url_kwarg = 'code'
+    
+    def post(self, request, format=None):
+        if not self.request.session.exists(self.request.session.session_key):
+            self.request.session.create()
+        
+        code = request.data.get(self.lookup_url_kwarg)
+        if code != None:
+            room_result = models.Room.object.filter(code=code)
+            if len(room_result) > 0:
+                room = room_result[0]
+                self.request.session['room_code'] = code
+                return Response({'message': "Room Joined"}, status=status.HTTP_200_OK)
+            return Response({"Bad Request": "No room found"}, status=status.HTTP_404_NOT_FOUND)
+        return Response({"Bad Request": "Invalid data"}, status=status.HTTP_400_BAD_REQUEST)
+```
+
+The one extra thing Tim adds here is the session room code to the create room view as well.
+
+```python
+self.request.session['room_code'] = room.code
+```
+
+Add this line to both the if and the else in the Create Room view.
