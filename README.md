@@ -1305,5 +1305,12 @@ return (
 
 Now, we should have our grid centered in the window.
 
-### The Join Room Page
+### The Join Room Page - UI
+
+First, let's get our import statements done. Here we will import a few things from MaterialUI and from the react router.
+
+```javascript
+import { Button, Grid, Typography, TextField } from "@mui/material";
+import { Link } from "react-router-dom";
+```
 
