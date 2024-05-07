@@ -28,6 +28,12 @@ export default function JoinRoom(){
                     variant="outlined"
                 />
             </Grid>
+            <Grid item xs={12} >
+                <Button color="primary" variant="outlined" onClick>Join Room</Button>
+            </Grid>
+            <Grid item xs={12} >
+                <Button color="secondary" variant="outlined" to="/" component={Link}>Back</Button>
+            </Grid>
         </Grid>
     );  
 }

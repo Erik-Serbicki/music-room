@@ -1350,3 +1350,21 @@ Next, inside the return statement, add the material ui components.
 </Grid>
 ```
 
+Check the join page on the website to make sure it works, at this point you should have a title and an input field.
+
+Before moving on to the functinality, we will add the two buttons to finish up the basic UI. 
+
+```javascript
+<Grid item xs={12} >
+    <Button color="primary" variant="outlined" onClick>Join Room</Button>
+</Grid>
+<Grid item xs={12} >
+    <Button color="secondary" variant="outlined" to="/" component={Link}>Back</Button>
+</Grid>
+```
+
+Again, you can change the variant and the colors to get your own look. I will go over at the end how to set up our own themes with materuial ui so we can still use the 'primary' and 'secondary' etc. keywords, but access custom colors. For now though I will use the defaults.
+
+Notice that for a simple page routing that sends no data we can use the Link component from react. You could even put variables in the 'to' property to have it be semi dynamic. For our case when joining a room we need to be able to handle errors AND connect to the right room, so we will build a custom onClick function for it.
+
+Generally you will want to build custom functions for page routing to catch any errors you can think of, but for simple operations like going back to home, or navigating somewhere else on the same page, the Link componenet works just fine. 
