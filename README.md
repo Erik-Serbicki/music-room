@@ -1324,7 +1324,8 @@ First, before the return statement, add the useState hook.
 ```javascript
 const [state, setState] = useState({
         roomCode: "", 
-        error: ""
+        errormsg: "",
+        error: false
     });
 ```
 
@@ -1343,7 +1344,7 @@ Next, inside the return statement, add the material ui components.
             label="Code"
             placeholder="Enter a Room Code"
             value={ state.roomCode }
-            helperText = { state.error }
+            helperText = { state.errormsg }
             variant="outlined"
         />
     </Grid>
@@ -1417,7 +1418,7 @@ class JoinRoom(APIView):
         
         code = request.data.get(self.lookup_url_kwarg)
         if code != None:
-            room_result = models.Room.object.filter(code=code)
+            room_result = models.Room.objects.filter(code=code)
             if len(room_result) > 0:
                 room = room_result[0]
                 self.request.session['room_code'] = code
@@ -1433,3 +1434,47 @@ self.request.session['room_code'] = room.code
 ```
 
 Add this line to both the if and the else in the Create Room view.
+
+All that is left is to set up the url endpoint for the new view, and hook it up to the fronted. 
+
+In api/urls.py
+
+```python
+path('join-room', views.JoinRoom.as_view())
+```
+
+Now let's go back to the frontend, and finish up this section by adding the POST request to the button function. This function will look very similar to the Create Room button. 
+
+```javascript
+const navigate = useNavigate();
+
+function roomButtonPressed(){
+    const requestOptions = {
+        method: "POST",
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify({  
+            code: state.roomCode
+        })
+    };
+
+    fetch('/api/join-room', requestOptions).then((response) => {
+        if (response.ok){
+            navigate(`/room/${state.roomCode}`)
+        } else{
+            setState(prevState => ({
+                ...prevState, error: true, errormsg: "Room Not Found"
+            }));
+        }
+    }).catch((error) => {
+        console.log(error)
+    });
+}
+```
+
+Don't forget to import useNavigate at the top. You can put it in the curly braces with Link, as they are both from the react router.
+
+## Tutorial Nine - Django Sessions/Home Page
+https://www.youtube.com/watch?v=ZP8ZMlKjT4o&list=PLzMcBGfZo4-kCLWnGmK0jUBmGLaJxvi4j&index=9
+
+### Styling
+

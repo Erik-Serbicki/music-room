@@ -1,6 +1,6 @@
 import React from "react";
 import { Button, Grid, Typography, TextField } from "@mui/material";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
 
 export default function JoinRoom(){
@@ -8,8 +8,11 @@ export default function JoinRoom(){
     // Create state and setState for the data we want to send
     const [state, setState] = useState({
         roomCode: "", 
-        error: ""
+        errormsg: "",
+        error: false
     });
+
+    const navigate = useNavigate();
 
     function handleTextFieldChange(e){
         setState(prevState => ({
@@ -18,7 +21,25 @@ export default function JoinRoom(){
     }
 
     function roomButtonPressed(){
-        console.log(state.roomCode);
+        const requestOptions = {
+            method: "POST",
+            headers: {"Content-Type": "application/json"},
+            body: JSON.stringify({  
+                code: state.roomCode.toUpperCase()
+            })
+        };
+
+        fetch('/api/join-room', requestOptions).then((response) => {
+            if (response.ok){
+                navigate(`/room/${state.roomCode.toUpperCase()}`)
+            } else{
+                setState(prevState => ({
+                    ...prevState, error: true, errormsg: "Room Not Found"
+                }));
+            }
+        }).catch((error) => {
+            console.log(error)
+        });
     }
 
     return(
@@ -30,11 +51,11 @@ export default function JoinRoom(){
             </Grid>
             <Grid item xs={12}>
                 <TextField 
-                    error={state.error}
+                    error = { state.error }
                     label="Code"
                     placeholder="Enter a Room Code"
                     value={ state.roomCode }
-                    helperText = { state.error }
+                    helperText = { state.errormsg }
                     variant="outlined"
                     onChange = {handleTextFieldChange}
                 />
