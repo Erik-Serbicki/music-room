@@ -1312,5 +1312,41 @@ First, let's get our import statements done. Here we will import a few things fr
 ```javascript
 import { Button, Grid, Typography, TextField } from "@mui/material";
 import { Link } from "react-router-dom";
+import {useState} from "react";
+```
+
+The UI for this page will be pretty simple: a field to type in a room code, a button to submit, and button to go back to home. Like the Create Room page we will put our elements inside a Grid component.
+
+Let's start with the Grid, a page heading, and the text field.
+
+First, before the return statement, add the useState hook.
+
+```javascript
+const [state, setState] = useState({
+        roomCode: "", 
+        error: ""
+    });
+```
+
+Next, inside the return statement, add the material ui components.
+
+```javascript
+<Grid container spacing={1} align="center">
+    <Grid item xs={12}>
+        <Typography variant="h3" component="h4">
+            Join A Room
+        </Typography>
+    </Grid>
+    <Grid item xs={12}>
+        <TextField 
+            error={state.error}
+            label="Code"
+            placeholder="Enter a Room Code"
+            value={ state.roomCode }
+            helperText = { state.error }
+            variant="outlined"
+        />
+    </Grid>
+</Grid>
 ```
 

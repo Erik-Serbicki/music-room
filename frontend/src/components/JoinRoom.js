@@ -1,8 +1,16 @@
 import React from "react";
 import { Button, Grid, Typography, TextField } from "@mui/material";
 import { Link } from "react-router-dom";
+import { useState } from "react";
 
 export default function JoinRoom(){
+
+    // Create state and setState for the data we want to send
+    const [state, setState] = useState({
+        roomCode: "", 
+        error: ""
+    });
+
     return(
         <Grid container spacing={1} align="center">
             <Grid item xs={12}>
@@ -12,11 +20,11 @@ export default function JoinRoom(){
             </Grid>
             <Grid item xs={12}>
                 <TextField 
-                    error="error"
+                    error={state.error}
                     label="Code"
                     placeholder="Enter a Room Code"
-                    value={ }
-                    helperText = { }
+                    value={ state.roomCode }
+                    helperText = { state.error }
                     variant="outlined"
                 />
             </Grid>
