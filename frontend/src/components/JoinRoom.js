@@ -11,6 +11,12 @@ export default function JoinRoom(){
         error: ""
     });
 
+    function handleTextFieldChange(e){
+        setState(prevState => ({
+            ...prevState, roomCode: e.target.value,
+        }));
+    }
+
     return(
         <Grid container spacing={1} align="center">
             <Grid item xs={12}>
@@ -26,6 +32,7 @@ export default function JoinRoom(){
                     value={ state.roomCode }
                     helperText = { state.error }
                     variant="outlined"
+                    onChange = {handleTextFieldChange}
                 />
             </Grid>
             <Grid item xs={12} >

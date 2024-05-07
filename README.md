@@ -1365,6 +1365,22 @@ Before moving on to the functinality, we will add the two buttons to finish up t
 
 Again, you can change the variant and the colors to get your own look. I will go over at the end how to set up our own themes with materuial ui so we can still use the 'primary' and 'secondary' etc. keywords, but access custom colors. For now though I will use the defaults.
 
-Notice that for a simple page routing that sends no data we can use the Link component from react. You could even put variables in the 'to' property to have it be semi dynamic. For our case when joining a room we need to be able to handle errors AND connect to the right room, so we will build a custom onClick function for it.
+Notice that for a simple page routing that sends no data we can use the Link component from react router. You could even put variables in the 'to' property to have it be semi dynamic. For our case when joining a room we need to be able to handle errors AND connect to the right room, so we will build a custom onClick function for it.
 
 Generally you will want to build custom functions for page routing to catch any errors you can think of, but for simple operations like going back to home, or navigating somewhere else on the same page, the Link componenet works just fine. 
+
+### The Join Room Page - Functionality
+
+Now we will write all of the methods to handle page actions. First, we need to capture the data from the text field. This function will look almost the same as the one for the Create Room page.
+
+```javascript
+function handleTextFieldChange(e){
+    setState(prevState => ({
+        ...prevState, roomCode: e.target.value,
+    }));
+}
+
+onChange = {handleTextFieldChange}
+```
+
+The 'onChange' property goes in the TextField with all the other properties. 
