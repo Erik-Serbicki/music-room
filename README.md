@@ -1478,3 +1478,68 @@ https://www.youtube.com/watch?v=ZP8ZMlKjT4o&list=PLzMcBGfZo4-kCLWnGmK0jUBmGLaJxv
 
 ### Styling
 
+Right now, our Home page is a single paragraph. Let's change that. We could add a sperate component like we did for Create, Join, and Room, but do do something different, let's create a function instead.
+
+This function is going to be inside the HomePage, and we will call it in our browser router.
+
+```javascript
+import { Button, Grid, Typography, ButtonGroup} from "@mui/material";
+
+function renderHomeScreen(){
+    return (
+        <Grid container spacing={3} align="center">
+            <Grid item xs={12}>
+                <Typography variant="h2" component="h2">
+                    Listen Together
+                </Typography>
+            </Grid>
+            <Grid item xs={12}>
+                <ButtonGroup disableElevation variant="outlined" color="primary">
+                    <Button color="primary" to="/create" component={ Link }>
+                        Create a Room
+                    </Button>
+                    <Button color="secondary" to="/join" component={ Link }>
+                        Join a Room
+                    </Button>
+                </ButtonGroup>
+            </Grid>
+        </Grid>
+    );
+}
+```
+
+Finally, replace the element for the home page in the browser router.
+
+```javascript
+element: renderHomeScreen(),
+```
+
+### Redirects
+
+If a session has already connected to a room, then if that user leaves the webpage and comes back, we want to send them to the room instead of the home page. We will make a new endpoint to check this, and then add a function to our home page to connect to the endpoint.
+
+First, in api/views.py, lets add a new endpoint.
+
+```python
+from django.http import JsonResponse
+
+class UserInRoom(APIView):
+    def get(self, request, format=None):
+        if not self.request.session.exists(self.request.session.session_key):
+            self.request.session.create()
+            
+        data = {
+            'code': self.request.session.get('room_code')
+        }
+        
+        return JsonResponse(data, status=status.HTTP_200_OK)
+```
+
+Don't forget to add a url for the view.
+
+```python
+path('user-in-room', views.UserInRoom.as_view())
+```
+
+Now we can add the logic on how to handle and use this new endpoint in the frontend.
+
