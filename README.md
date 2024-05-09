@@ -160,7 +160,7 @@ Here, we say that when api endpoint is blank, display the view we made. So when 
 
 ### Running the Server
 
-Before we run the server, there are a few commands we need to run to initialize the database. We don't ahve a database right now, but Django has an admin related database by default.
+Before we run the server, there are a few commands we need to run to initialize the database. We don't have a custom database right now, but Django has an admin related database by default.
 
 ```bash
 python manage.py makemigrations
@@ -499,6 +499,20 @@ First, we will create the entry point javascript file. Add index.js to the src/ 
 The game plan is to create a minimal HTML template to link to Django, and the have our react code take over that HTML file to create our webpage.
 
 In the templates folder, make a new folder called frontend, and in there make an index.html file.
+
+#### A Quick Note On Refreshing
+
+The way we have webpack set up, we SHOULD be able to see any changes made to the server, be it in python on the backend or React on the frontend, the server should update when we refresh the page. However, occasionally with React componenets, I have noticed that a simple refresh does not show me the changes I have made.
+
+If this happens to you, try these things: first, check your code. Make sure you have no errors ANYWHERE, and even if you don't, your code might still have some errors that it doesn't tell you. In Chrome, if you inspect element and look at the console, errors should appear there, but sometimes they dont. So, first step, double and triple check your code.
+
+If you are 100% sure it is not your fault that the page isn't updating, try a hard refresh. You can press Ctrl+Shift+R to hard refresh the page in Chrome. Furthermore, if you have the insepct menu open, you can right click the refresh button, and see 'Empty Cache and Hard Reload'.
+
+Lastly, your webpack config might be off. If you copied Tim's file from his Github it might not be completley compatible with the new version of webpack, so try using my webpack config instead. If you are following this far in the future and my webpack version is different from yours, you will need to do some research on your own to see if anything changed.
+
+Those are the three problems I ran into when making this: bad code, bad webpack config, or simply needed to hard reload.
+
+### Back to the First Page
 
 I used the html-5 boilerplate VSCode extension, you do not need it, but you can install it in the VSCode extensions tab if you want. We want to set up a very basic html page, we will add jquery and the roboto font from GoogleFonts as well.
 
@@ -1564,9 +1578,23 @@ In this section Tim styles the Room page, and sets up the api endpoint for leavi
 
 ### Room Page Styling
 
-First, we need to import everything from Material UI that we want to use on the page.
+First, we need to import everything from Material UI that we want to use on the page. Also, add `Link` to the react-router-dom import.
 
 ```javascript
 import { Grid, Button, Typography } from "@mui/material";
 ```
 
+In the video, Tim moves the information into the Grid as Typography components. I will leave them out, except for the room code, because in our finished product I don't want to display that information. It is up to you whether to leave it or not, you could have that information displayed as icons as well if you so desired. For now, I won't have that information shown, but I might console.log() it if I want to troubleshoot.
+
+So my Grid has two items: the room code as a title, and a button to go to home. Eventually we will build out the music player in here as well, but for now it will have just these basic items.
+
+```javascript
+Grid container spacing={1} align="center">
+    <Grid item xs={12}>
+        <Typography variant="h4" component="h4"> Room: {roomCode}</Typography>
+    </Grid>
+    <Grid item xs={12}>
+        <Button color='secondary' variant='outlined' to='/'> Home </Button>
+    </Grid>
+</Grid>
+```

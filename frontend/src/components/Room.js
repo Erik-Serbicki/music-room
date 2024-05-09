@@ -30,10 +30,14 @@ export default function Room(){
         });
     }
 
+    function goHome(){
+        
+    }
+
     return (
         <Grid container spacing={1} align="center">
             <Grid item xs={12}>
-                <Typography variant="h3" component="h3"> Room: {roomCode}</Typography>
+                <Typography variant="h4" component="h4"> Room: {roomCode}</Typography>
             </Grid>
             <Grid item xs={12}>
                 <Button color='secondary' variant='outlined' to='/' component={ Link }> Home </Button>
