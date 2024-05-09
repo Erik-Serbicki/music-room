@@ -1643,10 +1643,34 @@ function goHome(){
 }
 ```
 
+The reason we put an underscore before response is just to make it clear we are not using the response for anything. This is a convention, it does not change how the code works.
+
 Add `onClick={goHome}` go the button properties, and you should be good to go.
 
 ### Fixing edge cases
 
 One thing we should probably handle is what to do on our Room page if the room no longer exists. We added logic to the Join Room page if we tried to join a room that didn't exist, but someone could still type a random code into the url, and our room page would still render.
 
-Tim also adds logic to clear the room code from the Home Page. I did not have a problem with the room code, so the only logic I added was to the room loader to check if a room exists or not.  
+Tim also adds logic to clear the room code from the Home Page. I did not have a problem with the room code, so the only logic I added was to the room loader to check if a room exists or not. What you should do is create a custom 404 page to tell the user a room doesn't exist, but what I have is the server redirecting you to the home page. 
+
+Since this information is in the loader, it does not update with the state of the page, only on a page load. Therefore, if people are in a room, and the host leaves, there is no current logic to end the room. All the no host users would have to refresh the page, and then be sent back to home. This is fine for our basic web app here, but if you wanted the user expierence to be nicer, you could look into that.
+
+All I did was add a function to the loader for the room route in the browser router on the home page.
+
+```javascript
+loader: async ({params}) => {
+    const response = await fetch(`/api/get-room?code=${params.roomCode}`).then((response) => response.status);
+    if (response != 200 ){
+        return redirect('/');
+    }
+    else{
+        return null;
+    }
+}
+```
+
+Here I am just checking to see if the response from the get room view is 200 OK (a room with that code exists), and if not we will go back to the home page. We need the return for the else because the loader needs to return something, but I have it returning null since we don't really care about any data. If you don't have this return it will not work.
+
+This should have no conflict when creating or joining a room, it simply is there for the edge case of someone typing in a room to the url that doesn't exist, or the host leaving, and then the other users refreshing the page.
+
+I did double check to make sure the code was resetting, and as far as I can tell everytime I went to the home page the code was null, so I am pretty sure it reset like we would expect, so no need to do the extra stuff Tim does, this one loader function should be good enough.

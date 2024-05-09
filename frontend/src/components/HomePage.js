@@ -49,14 +49,14 @@ export default function HomePage(){
                     </Typography>
                 </Grid>
                 <Grid item xs={12}>
-                    <ButtonGroup disableElevation variant="outlined" color="primary">
-                        <Button color="primary" to="/create" component={ Link }>
-                            Create a Room
-                        </Button>
-                        <Button color="secondary" to="/join" component={ Link }>
-                            Join a Room
-                        </Button>
-                    </ButtonGroup>
+                    <Button color="primary" variant="outlined" to="/create" component={ Link }>
+                        Create a Room
+                    </Button>
+                    </Grid>
+                <Grid item xs={12}>
+                    <Button color="secondary" variant="outlined" to="/join" component={ Link }>
+                        Join a Room
+                    </Button>
                 </Grid>
             </Grid>
         );
