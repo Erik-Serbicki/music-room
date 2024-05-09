@@ -1683,6 +1683,8 @@ If the user is the host, we want them to be able to modify the settings of the r
 
 To switch up the workflow, Tim does the backend first this time, so we will follow along with that.
 
+### Updating the Model
+
 First we will create a new serializer to deal with the specific data we want to change.
 
 ```python
@@ -1731,3 +1733,21 @@ class UpdateView(APIView):
             
         return Response({'Bad Request': 'Invalid Data'}, status=status.HTTP_400_BAD_REQUEST)
 ```
+
+### The Room Settings Page
+
+Our room settings will be the same route as the room, but we ewill have logic to either show the settings component or the room component on a button press. First, lets add to the state to handle if we should show the settings or not. 
+
+```javascript
+const [state, setState] = useState({
+    guestCanPause: false, 
+    votesToSkip: 1,
+    isHost: false,
+    showSettings: false
+});
+```
+
+This is what the whole state should like now. The new variable will default to false, and if the user clicks the settings button, we will change it to true.
+
+
+
