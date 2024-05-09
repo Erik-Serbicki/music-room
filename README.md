@@ -1749,5 +1749,26 @@ const [state, setState] = useState({
 
 This is what the whole state should like now. The new variable will default to false, and if the user clicks the settings button, we will change it to true.
 
+Add a new function to update the state as well.
 
+```javascript
+function updateShowSettings(value){
+    setState(prevState => ({ 
+        ...prevState,
+        showSettings: value,
+    }));
+}
+```
+
+Now we will make a function to render the settings button. Remember, we only want the host to be able to see this button, so we will make a separate function for it, and add logic to only show if the session key matches the host.
+
+```javascript
+function renderSettingsButton(){
+    return (
+        <Grid item xs={12}>
+            <Button variant='outlined' color="primary" onClick={() => updateShowSettings(true)}>Settings</Button>
+        </Grid>
+    );
+}
+```
 

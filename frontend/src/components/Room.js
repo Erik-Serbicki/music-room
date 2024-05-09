@@ -8,7 +8,8 @@ export default function Room(){
     const [state, setState] = useState({
         guestCanPause: false, 
         votesToSkip: 1,
-        isHost: false
+        isHost: false,
+        showSettings: false
     });
 
     let { roomCode } = useParams();
@@ -38,6 +39,21 @@ export default function Room(){
             headers: {"Content-Type": "application/json"},
         }
         fetch('/api/leave-room', requestOptions).then((_response) => navigate('/'))
+    }
+
+    function updateShowSettings(value){
+        setState(prevState => ({ 
+            ...prevState,
+            showSettings: value,
+        }));
+    }
+
+    function renderSettingsButton(){
+        return (
+            <Grid item xs={12}>
+                <Button variant='outlined' color="primary" onClick={() => updateShowSettings(true)}>Settings</Button>
+            </Grid>
+        );
     }
 
     return (
