@@ -1543,3 +1543,30 @@ path('user-in-room', views.UserInRoom.as_view())
 
 Now we can add the logic on how to handle and use this new endpoint in the frontend.
 
+In the version of React I am using, my logic looks a bit different from Tim's. The createBrowserRouter comes with a 'loader' property that can specify data to load before rendering. We can also use the 'redirect' method from react router to redirect INSIDE loaders and actions only. Don't try to use redirect in a regular function, use useNavigate instead.
+
+In the loader, we can specify an async function, use fetch() to connect to the api endpoint, and then wither render the home screen or redirect if the code is null or not.
+
+```javascript
+loader: async () => {
+    const code = await fetch('/api/user-in-room').then((response) => response.json().then((data) => data.code));
+    return code ? (redirect(`/room/${code}`)) : renderHomeScreen();
+}
+```
+
+We don't need to use any hooks for this, we can stick to the basic loader actions. What should happen, with the async and await, is the regular element should render while our code is fetching the data, and then once the data is fetched we return something from the loader. In this case, one of the things we return is a redirect, but it could be some other data we want to use on the page.
+
+## Tutorial Ten - Leaving Rooms
+
+https://www.youtube.com/watch?v=uhyHwY94vwQ&list=PLzMcBGfZo4-kCLWnGmK0jUBmGLaJxvi4j&index=10
+
+In this section Tim styles the Room page, and sets up the api endpoint for leaving rooms.
+
+### Room Page Styling
+
+First, we need to import everything from Material UI that we want to use on the page.
+
+```javascript
+import { Grid, Button, Typography } from "@mui/material";
+```
+

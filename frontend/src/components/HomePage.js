@@ -2,14 +2,19 @@ import React from "react";
 import JoinRoom from "./JoinRoom";
 import CreateRoom from "./CreateRoom";
 import Room from "./Room";
-import { createBrowserRouter, RouterProvider, Link} from "react-router-dom";
+import { createBrowserRouter, RouterProvider, Link, redirect} from "react-router-dom";
 import { Button, Grid, Typography, ButtonGroup} from "@mui/material";
 
 export default function HomePage(){
+
     const router = createBrowserRouter([
         {
             path: "/",
             element: renderHomeScreen(),
+            loader: async () => {
+                const code = await fetch('/api/user-in-room').then((response) => response.json().then((data) => data.code));
+                return code ? (redirect(`/room/${code}`)) : renderHomeScreen();
+            }
         },
         {
             path: "/create",
@@ -24,8 +29,6 @@ export default function HomePage(){
             element: <Room />,
         },
     ]);
-
-    
 
     function renderHomeScreen(){
         return (
