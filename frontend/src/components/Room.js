@@ -1,6 +1,6 @@
 import React from 'react'
 import { useState } from 'react';
-import { useParams, Link } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import { useEffect } from 'react';
 import { Grid, Button, Typography } from "@mui/material";
 
@@ -12,6 +12,8 @@ export default function Room(){
     });
 
     let { roomCode } = useParams();
+
+    const navigate = useNavigate();
 
     useEffect(() => {
         getRoomDetails();
@@ -31,7 +33,11 @@ export default function Room(){
     }
 
     function goHome(){
-        
+        const requestOptions = {
+            method: "POST",
+            headers: {"Content-Type": "application/json"},
+        }
+        fetch('/api/leave-room', requestOptions).then((_response) => navigate('/'))
     }
 
     return (
@@ -40,7 +46,7 @@ export default function Room(){
                 <Typography variant="h4" component="h4"> Room: {roomCode}</Typography>
             </Grid>
             <Grid item xs={12}>
-                <Button color='secondary' variant='outlined' to='/' component={ Link }> Home </Button>
+                <Button color='secondary' variant='outlined' onClick={goHome}> Home </Button>
             </Grid>
         </Grid>
     );

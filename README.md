@@ -1578,7 +1578,7 @@ In this section Tim styles the Room page, and sets up the api endpoint for leavi
 
 ### Room Page Styling
 
-First, we need to import everything from Material UI that we want to use on the page. Also, add `Link` to the react-router-dom import.
+First, we need to import everything from Material UI that we want to use on the page. Also, add `useNavigate` to the react-router-dom import.
 
 ```javascript
 import { Grid, Button, Typography } from "@mui/material";
@@ -1594,14 +1594,14 @@ Grid container spacing={1} align="center">
         <Typography variant="h4" component="h4"> Room: {roomCode}</Typography>
     </Grid>
     <Grid item xs={12}>
-        <Button color='secondary' variant='outlined' to='/'> Home </Button>
+        <Button color='secondary' variant='outlined' > Home </Button>
     </Grid>
 </Grid>
 ```
 
 ### Setting up the Backend
 
-Unfortunatly, when we click the Home button, nothing happens. Our server is redirecting us to Home, then immediatly sending us to the room again. Let's fix that. We will make a method in our frontend to run when we click the button, and we want it to connect to a view in our backend. So, let's create the new view first. 
+Unfortunatly, when we click the Home button, nothing happens. If we added the regular go back properties, our server would redirect us to Home, then immediatly send us to the room again. We will actually make a method in our frontend to run when we click the button, and we want it to connect to a view in our backend. So, let's create the new view first. 
 
 Our view need to do two things: if the session is the host, remove the room. If the session is not the host, only delete the room code from that session, but leave the room open.
 
@@ -1623,3 +1623,30 @@ class LeaveRoom(APIView):
         return Response({'Message':'Success'}, status=status.HTTP_200_OK)
 ```
 
+Add the new view to the urls, and that is all we need from the backend.
+
+```python
+path('leave-room', views.LeaveRoom.as_view())
+```
+
+### Finishing the Frontend
+
+Lastly, we need to create the method in the Room.js page to connect to the endpoint and navigate to Home.
+
+```javascript
+function goHome(){
+    const requestOptions = {
+        method: "POST",
+        headers: {"Content-Type": "application/json"},
+    }
+    fetch('/api/leave-room', requestOptions).then((_response) => navigate('/'))
+}
+```
+
+Add `onClick={goHome}` go the button properties, and you should be good to go.
+
+### Fixing edge cases
+
+One thing we should probably handle is what to do on our Room page if the room no longer exists. We added logic to the Join Room page if we tried to join a room that didn't exist, but someone could still type a random code into the url, and our room page would still render.
+
+Tim also adds logic to clear the room code from the Home Page. I did not have a problem with the room code, so the only logic I added was to the room loader to check if a room exists or not.  

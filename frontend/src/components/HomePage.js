@@ -13,6 +13,7 @@ export default function HomePage(){
             element: renderHomeScreen(),
             loader: async () => {
                 const code = await fetch('/api/user-in-room').then((response) => response.json().then((data) => data.code));
+                console.log(code);
                 return code ? (redirect(`/room/${code}`)) : renderHomeScreen();
             }
         },
@@ -27,6 +28,15 @@ export default function HomePage(){
         {
             path: "/room/:roomCode",
             element: <Room />,
+            loader: async ({params}) => {
+                const response = await fetch(`/api/get-room?code=${params.roomCode}`).then((response) => response.status);
+                if (response != 200 ){
+                    return redirect('/');
+                }
+                else{
+                    return null;
+                }
+            }
         },
     ]);
 
