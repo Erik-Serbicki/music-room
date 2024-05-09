@@ -1674,3 +1674,60 @@ Here I am just checking to see if the response from the get room view is 200 OK 
 This should have no conflict when creating or joining a room, it simply is there for the edge case of someone typing in a room to the url that doesn't exist, or the host leaving, and then the other users refreshing the page.
 
 I did double check to make sure the code was resetting, and as far as I can tell everytime I went to the home page the code was null, so I am pretty sure it reset like we would expect, so no need to do the extra stuff Tim does, this one loader function should be good enough.
+
+## Tutorial Eleven - Updating Django Models
+
+https://www.youtube.com/watch?v=JOpmlhAZsPI&list=PLzMcBGfZo4-kCLWnGmK0jUBmGLaJxvi4j&index=11
+
+If the user is the host, we want them to be able to modify the settings of the room while they are in it, not just when the room is created.
+
+To switch up the workflow, Tim does the backend first this time, so we will follow along with that.
+
+First we will create a new serializer to deal with the specific data we want to change.
+
+```python
+class UpdateRoomSerializer(serializers.ModelSerializer):
+    code = serializers.CharField(validators=[])
+    
+    class Meta:
+        model = models.Room
+        fields = ('guest_can_pause', 'votes_to_skip', 'code')
+```
+
+As Tim explains in the video, we need that first line because in our model, the code is flagged as unique. So the serializer will not work if we pass it a room code that already exists, because it is not unique. However, we need to be able to pass room codes for rooms that exists, or else we cannot update them. The first line allows us to do that.
+
+Second, let's create the new view in api/views.py.
+
+```python
+class UpdateView(APIView):
+    serializer_class = serializers.UpdateRoomSerializer
+    
+    def patch(self, request, format=None):
+        if not self.request.session.exists(self.request.session.session_key):
+            self.request.session.create()
+        
+        serializer = self.serializer_class(data=request.data)
+        if serializer.is_valid():
+            guest_can_pause = serializer.data.get('guest_can_pause')
+            votes_to_skip = serializer.data.get('votes_to_skip')
+            room_code = serializer.data.get('code')
+            
+            queryset = models.Room.objects.filter(code=room_code)
+            
+            if not queryset.exists():
+                return Response({"msg":"Room not Found"}, status=status.HTTP_404_NOT_FOUND)
+            
+            room = queryset[0]
+            user_id = self.request.session.session_key
+            
+            if room.host != user_id:
+                return Response({"msg":"You are not the host"}, status=status.HTTP_403_FORBIDDEN)
+            
+            room.guest_can_pause = guest_can_pause
+            room.votes_to_skip
+            room.save(update_fields=['guest_can_pause', 'votes_to_skip'])
+            
+            return Response(serializers.RoomSerializer(room).data, status=status.HTTP_200_OK)
+            
+        return Response({'Bad Request': 'Invalid Data'}, status=status.HTTP_400_BAD_REQUEST)
+```
