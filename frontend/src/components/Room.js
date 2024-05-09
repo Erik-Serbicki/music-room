@@ -1,7 +1,8 @@
 import React from 'react'
 import { useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, Link } from 'react-router-dom';
 import { useEffect } from 'react';
+import { Grid, Button, Typography } from "@mui/material";
 
 export default function Room(){
     const [state, setState] = useState({
@@ -30,11 +31,13 @@ export default function Room(){
     }
 
     return (
-        <div>
-            <h2>{roomCode}</h2>
-            <p>Votes: {state.votesToSkip}</p>
-            <p>Guest can pause: {state.guestCanPause.toString()}</p>
-            <p>Host: {state.isHost.toString()}</p>
-        </div>
+        <Grid container spacing={1} align="center">
+            <Grid item xs={12}>
+                <Typography variant="h3" component="h3"> Room: {roomCode}</Typography>
+            </Grid>
+            <Grid item xs={12}>
+                <Button color='secondary' variant='outlined' to='/' component={ Link }> Home </Button>
+            </Grid>
+        </Grid>
     );
 }
