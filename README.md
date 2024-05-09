@@ -1598,3 +1598,28 @@ Grid container spacing={1} align="center">
     </Grid>
 </Grid>
 ```
+
+### Setting up the Backend
+
+Unfortunatly, when we click the Home button, nothing happens. Our server is redirecting us to Home, then immediatly sending us to the room again. Let's fix that. We will make a method in our frontend to run when we click the button, and we want it to connect to a view in our backend. So, let's create the new view first. 
+
+Our view need to do two things: if the session is the host, remove the room. If the session is not the host, only delete the room code from that session, but leave the room open.
+
+You will notice that for this view we need a POST request, not a GET request. This is because we want to change data on the server.
+
+In addition, you would probably want to make sure the room exists, and the session, and all that, and return different responses depending on those things. We won't have that here, because we know that we will only use this endpoint in the room, which can only get to if those other things exist. Best practice is still to account for everything, so you could add tht if you wish, but to stick to the tutorial, we will not.
+
+```python
+class LeaveRoom(APIView):
+    def post(self, request, format=None):
+        if 'room_code' in self.request.session:
+            self.request.session.pop('room_code')
+            host_id = self.request.session.session_key
+            room_results = models.Room.objects.filter(host=host_id)
+            if len(room_results) > 0:
+                room = room_results[0]
+                room.delete()
+                
+        return Response({'Message':'Success'}, status=status.HTTP_200_OK)
+```
+
