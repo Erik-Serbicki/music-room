@@ -1760,7 +1760,7 @@ function updateShowSettings(value){
 }
 ```
 
-Now we will make a function to render the settings button. Remember, we only want the host to be able to see this button, so we will make a separate function for it, and add logic to only show if the session key matches the host.
+Now we will make a function to render the settings button. Remember, we only want the host to be able to see this button, so we will make a separate function for it, and add logic to only show if the user is the host.
 
 ```javascript
 function renderSettingsButton(){
@@ -1770,5 +1770,21 @@ function renderSettingsButton(){
         </Grid>
     );
 }
+```
+
+Then, inside the final return statement, add the following line of code wherever you want your button to appear. 
+
+```javascript
+{state.isHost ? renderSettingsButton() : null}
+```
+
+### UI For the Settings
+
+For the actual settings UI, we will basically be taking the ui from the create room page, and modifying it slightly.
+
+Because of this, we need to import CreateRoom.
+
+```javascript
+import CreateRoom from "./CreateRoom";
 ```
 

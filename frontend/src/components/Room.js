@@ -3,6 +3,7 @@ import { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useEffect } from 'react';
 import { Grid, Button, Typography } from "@mui/material";
+import CreateRoom from "./CreateRoom";
 
 export default function Room(){
     const [state, setState] = useState({
@@ -56,6 +57,22 @@ export default function Room(){
         );
     }
 
+    function renderSettingsButton(){
+        <Grid container spacing={1} align="center">
+            <Grid item xs={12}>
+                <CreateRoom 
+                    update={true} 
+                    votesToSkip={state.votesToSkip} 
+                    guestCanPause={state.guestCanPause} 
+                    roomCode={state.roomCode}
+                />
+            </Grid>
+            <Grid item xs={12}>
+                
+            </Grid>
+        </Grid>
+    }
+
     return (
         <Grid container spacing={1} align="center">
             <Grid item xs={12}>
@@ -64,6 +81,7 @@ export default function Room(){
             <Grid item xs={12}>
                 <Button color='secondary' variant='outlined' onClick={goHome}> Home </Button>
             </Grid>
+            {state.isHost ? renderSettingsButton() : null}
         </Grid>
     );
 }
