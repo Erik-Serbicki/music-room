@@ -57,7 +57,7 @@ export default function Room(){
         );
     }
 
-    function renderSettingsButton(){
+    function renderSettings(){
         <Grid container spacing={1} align="center">
             <Grid item xs={12}>
                 <CreateRoom 
@@ -68,7 +68,7 @@ export default function Room(){
                 />
             </Grid>
             <Grid item xs={12}>
-                
+                <Button variant='outlined' color="secondary" onClick={() => updateShowSettings(false)}>Back</Button>
             </Grid>
         </Grid>
     }
