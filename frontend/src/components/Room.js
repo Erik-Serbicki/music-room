@@ -58,7 +58,8 @@ export default function Room(){
     }
 
     function renderSettings(){
-        <Grid container spacing={1} align="center">
+        return (
+            <Grid container spacing={1} align="center">
             <Grid item xs={12}>
                 <CreateRoom 
                     update={true} 
@@ -68,9 +69,14 @@ export default function Room(){
                 />
             </Grid>
             <Grid item xs={12}>
-                <Button variant='outlined' color="secondary" onClick={() => updateShowSettings(false)}>Back</Button>
+                <Button variant='outlined' color="secondary" onClick={() => updateShowSettings(false)}>Close</Button>
             </Grid>
         </Grid>
+        );
+    }
+
+    if (state.showSettings){
+        return renderSettings()
     }
 
     return (
@@ -78,10 +84,10 @@ export default function Room(){
             <Grid item xs={12}>
                 <Typography variant="h4" component="h4"> Room: {roomCode}</Typography>
             </Grid>
+            {state.isHost ? renderSettingsButton() : null}
             <Grid item xs={12}>
                 <Button color='secondary' variant='outlined' onClick={goHome}> Home </Button>
             </Grid>
-            {state.isHost ? renderSettingsButton() : null}
         </Grid>
     );
 }
