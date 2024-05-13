@@ -2019,3 +2019,32 @@ The only problem with this code right now is that if we try to change the settin
 
 Simply call it at the end of the fetch request in the save button function, and it will call the getRoomDetails() function, because we passed it through in the room page.
 
+## Tutorial Thirteen - Spotify API Authentication and Tokens
+
+https://www.youtube.com/watch?v=rYDDWVuv-kI&list=PLzMcBGfZo4-kCLWnGmK0jUBmGLaJxvi4j&index=13
+
+GO WATCH THE VIDEO!!!
+
+As remarked at the beginning of the video, this section is the most complex, with the most potential to get little things wrong. I will not be describing in detail the process of getting the Spotify API set up. I promise you, if you follow just this guide, you will get things wrong.
+
+### Setting up the Webserver
+
+Before dealing with Spotify, let's do some setup on our web server. 
+
+First, create a new Django app to deal handle interacting with spotify.
+
+In the terminal navigate to where manage.py is.
+
+```bash
+python manage.py startapp spotify
+```
+
+Add credentials.py and urls.py to the folder.
+
+To credentials.py add the fields we need for the api.
+
+```python
+CLIENT_ID = ""
+CLIENT_SECRET = ""
+REDIRECT_URI = ""
+```
