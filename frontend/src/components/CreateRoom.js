@@ -45,11 +45,13 @@ import { Button, Grid, Typography, TextField, FormHelperText, FormControl, Radio
             (data) =>  navigate(`/room/${data.code}`))
     }
 
+    const title = update ? "Settings" : "Create a Room";
+
     return (
         <Grid container rowSpacing={3} >
             <Grid item xs={12} align={"center"} >
                 <Typography component="h2" variant="h2">
-                    Create A Room
+                    {title}
                 </Typography>
             </Grid>
             <Grid item xs={12} align="center" >

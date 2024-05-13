@@ -1873,3 +1873,14 @@ defaultValue={votesToSkip}
 
 will set the default value of the text input field as whatever was passed through as a prop. Since this is the default value of the text field, we do not want this to change as the state updates.
 
+### Changing CreateRoom Based on Props
+
+We want the look of the CreateRoom page to change depending on if we have called it in the home page, or as the settings menu. We will now add logic to change the rendered components depending on the value of the 'update' prop.
+
+First, above the return statement let's add logic to change the title of the page.
+
+```javascript
+const title = update ? "Settings" : "Create a Room";
+```
+
+In the Typography component, simply replace 'Create a Room' with `{title}`.
