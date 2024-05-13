@@ -2066,8 +2066,10 @@ Import everything.
 
 ```python
 from .credentials import REDIRECT_URI, CLIENT_ID, CLIENT_SECRET
-from rest_framework.views import APIView
 from requests import Request, post
+from rest_framework import status
+from rest_framework.response import Response
+from rest_framework.views import APIView
 ```
 
 Create the view.
@@ -2077,3 +2079,12 @@ class AuthURL(APIView):
     def get(self, request, format=None):
         pass
 ```
+
+First, we will define the scopes. These are predefined (by Spotify) keywords that tell the api what users on our application are allowed to do.
+
+```python
+scopes = 'user-read-playback-state user-modify-playback-state user-read-currently-playing'
+```
+
+Next, we create a variable that the api view will return. This is the url that we want to go to to authenticate. THe reason we aren't going to the url right now is that we want the frontend to handle that part. So here, we just return the url, and then the frontend will grab it and go to it.
+
