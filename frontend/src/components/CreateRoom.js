@@ -9,6 +9,7 @@ import { Button, Grid, Typography, TextField, FormHelperText, FormControl, Radio
     const [state, setState] = useState({
         guestCanPause: guestCanPause,
         votesToSkip: votesToSkip,
+        msg: '',
     });
 
     const navigate = useNavigate();
@@ -45,6 +46,33 @@ import { Button, Grid, Typography, TextField, FormHelperText, FormControl, Radio
             (data) =>  navigate(`/room/${data.code}`))
     }
 
+    function handleSaveButtonPressed(){
+        // Set the options for the request: method, content type, and actual data in the body
+        const requestOptions = {
+            method: "PATCH",
+            headers: {"Content-Type" : "application/json"},
+            body: JSON.stringify({
+                votes_to_skip: state.votesToSkip,
+                guest_can_pause: state.guestCanPause,
+                code: roomCode,
+            }),
+        };
+
+        // fetch to the endpoint we want, take the response we get, and navigate to room page
+        fetch("/api/update-room", requestOptions).then( 
+            (response) => {
+                if (response.ok) {
+                    setState(prevState => ({
+                        ...prevState, msg: "Settings Saved!",
+                    }));
+                } else {
+                    setState(prevState => ({
+                        ...prevState, msg: response.statusText,
+                    }));
+                }
+            });
+    }
+
     const title = update ? "Settings" : "Create a Room";
 
     function renderCreateButtons(){
@@ -59,7 +87,7 @@ import { Button, Grid, Typography, TextField, FormHelperText, FormControl, Radio
     function renderSettingsButtons(){
         return(
             <Grid item xs={12} align="center" >
-                <Button color="primary" variant="outlined" onClick={handleRoomButtonPressed}>Save</Button>
+                <Button color="primary" variant="outlined" onClick={handleSaveButtonPressed}>Save</Button>
             </Grid>
         );
     }
