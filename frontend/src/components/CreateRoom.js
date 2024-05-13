@@ -70,6 +70,7 @@ import { Button, Grid, Typography, TextField, FormHelperText, FormControl, Radio
                         ...prevState, msg: `${response.status}: ${response.statusText}`,
                     }));
                 }
+                updateCallback();
             });
     }
 

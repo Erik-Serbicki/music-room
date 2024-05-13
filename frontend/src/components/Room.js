@@ -66,6 +66,7 @@ export default function Room(){
                     votesToSkip={state.votesToSkip} 
                     guestCanPause={state.guestCanPause} 
                     roomCode={roomCode}
+                    updateCallback={getRoomDetails}
                 />
             </Grid>
             <Grid item xs={12}>

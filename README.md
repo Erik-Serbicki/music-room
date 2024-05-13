@@ -1986,3 +1986,6 @@ To use it, we will create a new Grid item at the top of the return statement.
 </Grid>
 ```
 
+The only problem with this code right now is that if we try to change the settings and then go back, you can see that the values are not actually changed until you refresh the page. What we want to do is call the getRoomDetails() function when we go back, and that is what our updateCallback() prop is for.
+
+Simply call it at the end of the fetch request in the save button function, and it will call the getRoomDetails() function, because we passed it through in the room page.
