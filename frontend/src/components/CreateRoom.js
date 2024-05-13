@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react"; 
-import { Button, Grid, Typography, TextField, FormHelperText, FormControl, Radio, RadioGroup, FormControlLabel, Collapse } from "@mui/material";
+import { AlertTitle, Button, Grid, Typography, TextField, FormHelperText, FormControl, Radio, RadioGroup, FormControlLabel, Collapse, Alert } from "@mui/material";
 
  export default function CreateRoom({votesToSkip=1, guestCanPause=true, update=false, roomCode=null, updateCallback= ()=>{}}){
     
@@ -9,7 +9,8 @@ import { Button, Grid, Typography, TextField, FormHelperText, FormControl, Radio
     const [state, setState] = useState({
         guestCanPause: guestCanPause,
         votesToSkip: votesToSkip,
-        msg: '',
+        saveMsg: '',
+        saveSuccess: true,
     });
 
     const navigate = useNavigate();
@@ -63,11 +64,11 @@ import { Button, Grid, Typography, TextField, FormHelperText, FormControl, Radio
             (response) => {
                 if (response.ok) {
                     setState(prevState => ({
-                        ...prevState, msg: "Settings Saved!",
+                        ...prevState, saveMsg: "Settings Saved!",
                     }));
                 } else {
                     setState(prevState => ({
-                        ...prevState, msg: `${response.status}: ${response.statusText}`,
+                        ...prevState, saveMsg: `${response.status}: ${response.statusText}`, saveSuccess: false,
                     }));
                 }
                 updateCallback();
@@ -96,8 +97,34 @@ import { Button, Grid, Typography, TextField, FormHelperText, FormControl, Radio
     return (
         <Grid container rowSpacing={3} >
             <Grid item xs={12}>
-                <Collapse in={state.msg != ''}>
-                    { state.msg }
+                <Collapse in={state.saveMsg != ''}>
+                    { state.saveSuccess ? (
+                        <Alert 
+                            severity="success" 
+                            variant="outlined" 
+                            onClose={() => {
+                                setState(prevState => ({
+                                    ...prevState, saveMsg: '', saveSuccess: true,
+                                }));
+                        }}
+                        >
+                            <AlertTitle>Success</AlertTitle>
+                            {state.saveMsg}
+                        </Alert>
+                    ) : (
+                        <Alert
+                            severity="error"
+                            variant="outlined"
+                            onClose={() => {
+                                setState(prevState => ({
+                                    ...prevState, saveMsg: '', saveSuccess: true,
+                                }));
+                        }}
+                        >
+                            <AlertTitle>Error</AlertTitle>
+                            {state.saveMsg}
+                        </Alert>
+                )}
                 </Collapse>
             </Grid>
             <Grid item xs={12} align={"center"} >

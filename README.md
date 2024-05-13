@@ -1800,6 +1800,7 @@ function renderSettings(){
                 votesToSkip={state.votesToSkip} 
                 guestCanPause={state.guestCanPause} 
                 roomCode={roomCode}
+                updateCallback = {getRoomDetails}
             />
         </Grid>
         <Grid item xs={12}>
@@ -1963,7 +1964,8 @@ Add the 'msg' property to the state
 const [state, setState] = useState({
     guestCanPause: guestCanPause,
     votesToSkip: votesToSkip,
-    msg: '',
+    saveMsg: '',
+    saveSuccess: true;
 });
 
 ```
@@ -1974,18 +1976,46 @@ And change the onClick property of the button in the renderSettingsButtons() fun
 onClick={handleSaveButtonPressed}
 ```
 
-To show the message on screen, Tim uses the Collapse component from materialUI. Let's go ahead and import that. Simply add 'Collapse' to the import statement from "@mui/material"
+To show the message on screen, Tim uses the Collapse and Alert components from MaterialUI. Let's go ahead and import that. Simply add 'Collapse' and 'Alert' to the import statement from "@mui/material"
 
 To use it, we will create a new Grid item at the top of the return statement.
 
 ```javascript
 <Grid item xs={12}>
-    <Collapse in={state.msg != ''}>
-        { state.msg }
+    <Collapse in={state.SaveMsg != ''}>
+        { state.saveSuccess ? (
+            <Alert 
+                severity="success" 
+                variant="outlined" 
+                onClose={() => {
+                    setState(prevState => ({
+                        ...prevState, saveMsg: '', saveSuccess: true,
+                    }));
+            }}
+            >
+                {state.saveMsg}
+            </Alert>
+        ) : (
+            <Alert
+                severity="error"
+                variant="outlined"
+                onClose={() => {
+                    setState(prevState => ({
+                        ...prevState, saveMsg: '', saveSuccess: true,
+                    }));
+            }}
+            >
+                {state.saveMsg}
+            </Alert>
+    )}
     </Collapse>
 </Grid>
 ```
 
+This adds a nice, color coded popup message, with an icon the user can click to close it.
+
+
 The only problem with this code right now is that if we try to change the settings and then go back, you can see that the values are not actually changed until you refresh the page. What we want to do is call the getRoomDetails() function when we go back, and that is what our updateCallback() prop is for.
 
 Simply call it at the end of the fetch request in the save button function, and it will call the getRoomDetails() function, because we passed it through in the room page.
+
