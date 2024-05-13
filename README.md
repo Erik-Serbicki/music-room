@@ -1861,3 +1861,15 @@ const [state, setState] = useState({
 });
 ```
 
+One thing you might want to do is change the name of the props. It can get confusing because we have the state variables named the same thing as the props. I will keep it like this because Tim does in the tutorial, but you can consider changing the name of the props, at lkeast the votesToSkip and guestCanPause props.
+
+If not, just keep in mind that in the rest of your code, state.variableName is the one that will update depending on the input of the user, and variableName refers to the prop itself. This will not change as the state updates.
+
+So, in the TextField component near the bottom of the page, putting
+
+```javascript
+defaultValue={votesToSkip}
+```
+
+will set the default value of the text input field as whatever was passed through as a prop. Since this is the default value of the text field, we do not want this to change as the state updates.
+

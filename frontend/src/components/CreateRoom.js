@@ -69,7 +69,7 @@ import { Button, Grid, Typography, TextField, FormHelperText, FormControl, Radio
                         required={true} 
                         type="number" 
                         onChange={handleVotesChange}
-                        defaultValue={defaultVotes} 
+                        defaultValue={votesToSkip} 
                         inputProps={{
                             min:1, style:{textAlign: "center"}
                             }
