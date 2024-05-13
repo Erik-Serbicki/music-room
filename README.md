@@ -2088,3 +2088,28 @@ scopes = 'user-read-playback-state user-modify-playback-state user-read-currentl
 
 Next, we create a variable that the api view will return. This is the url that we want to go to to authenticate. THe reason we aren't going to the url right now is that we want the frontend to handle that part. So here, we just return the url, and then the frontend will grab it and go to it.
 
+```python
+class AuthURL(APIView):
+    def get(self, request, format=None):
+        scopes = 'user-read-playback-state user-modify-playback-state user-read-currently-playing'
+        
+        url = Request('GET', 'https://accounts.spotify.com/authorize', params={
+            'scope': scopes,
+            'response_type': 'code',
+            'redirect_uri': REDIRECT_URI,
+            'client_id': CLIENT_ID
+        }).prepare().url
+        
+        return Response({'url': url}, status=status.HTTP_200_OK)
+```
+
+Add the url to urls.py.
+
+```python
+from django.urls import path
+from . import views
+
+urlpatterns = [
+    path('get-auth-url', views.AuthURL.as_view())
+]
+```
