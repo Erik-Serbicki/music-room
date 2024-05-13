@@ -6,4 +6,4 @@ from requests import Request, post
 # Create your views here.
 class AuthURL(APIView):
     def get(self, request, format=None):
-        scopes = ''
+        scopes = 'user-read-playback-state user-modify-playback-state user-read-currently-playing'
