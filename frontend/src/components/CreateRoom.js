@@ -47,6 +47,23 @@ import { Button, Grid, Typography, TextField, FormHelperText, FormControl, Radio
 
     const title = update ? "Settings" : "Create a Room";
 
+    function renderCreateButtons(){
+        return(
+            <Grid item xs={12} align="center" >
+                <Button color="primary" variant="outlined" onClick={handleRoomButtonPressed}>Create a Room</Button>
+                <Button color="secondary" variant="outlined" to="/" component={Link}>Back</Button>
+            </Grid>
+        );
+    }
+
+    function renderSettingsButtons(){
+        return(
+            <Grid item xs={12} align="center" >
+                <Button color="primary" variant="outlined" onClick={handleRoomButtonPressed}>Save</Button>
+            </Grid>
+        );
+    }
+
     return (
         <Grid container rowSpacing={3} >
             <Grid item xs={12} align={"center"} >
@@ -80,12 +97,7 @@ import { Button, Grid, Typography, TextField, FormHelperText, FormControl, Radio
                     <FormHelperText component="span"><div align="center">Votes Required to Skip</div></FormHelperText>
                 </FormControl>
             </Grid>
-            <Grid item xs={12} align="center" >
-                <Button color="primary" variant="outlined" onClick={handleRoomButtonPressed}>Create a Room</Button>
-            </Grid>
-            <Grid item xs={12} align="center" >
-                <Button color="secondary" variant="outlined" to="/" component={Link}>Back</Button>
-            </Grid>
+            { update ? renderSettingsButtons() : renderCreateButtons() }
         </Grid>
     );
 }

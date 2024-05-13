@@ -1884,3 +1884,38 @@ const title = update ? "Settings" : "Create a Room";
 ```
 
 In the Typography component, simply replace 'Create a Room' with `{title}`.
+
+You chould be able to check and see that that works now.
+
+Next, we will move the button components into their own function, and add logic to render that function, or another one which will be the setup we want for settings.
+
+Cut and paste the two grid items that are the buttons, put them in a new function, and put both buttons inside the same grid item.
+
+```javascript
+function renderCreateButtons(){
+    return(
+        <Grid item xs={12} align="center" >
+            <Button color="primary" variant="outlined" onClick={handleRoomButtonPressed}>Create a Room</Button>
+            <Button color="secondary" variant="outlined" to="/" component={Link}>Back</Button>
+        </Grid>
+    );
+}
+```
+
+Make a second function, and inside it will only have one button that for now will be the same as the Create a Room button. 
+
+```javascript
+function renderSettingsButtons(){
+    return(
+        <Grid item xs={12} align="center" >
+            <Button color="primary" variant="outlined" onClick={handleRoomButtonPressed}>Save</Button>
+        </Grid>
+    );
+}
+```
+
+Here we have only changed the text of the button, but next we will create a new function for it. Lastly, go to where the buttons used to be in the return statement add add logic to render each function.
+
+```javascript
+{ update ? renderSettingsButtons() : renderCreateButtons() }
+```
