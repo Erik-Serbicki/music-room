@@ -2027,9 +2027,14 @@ GO WATCH THE VIDEO!!!
 
 As remarked at the beginning of the video, this section is the most complex, with the most potential to get little things wrong. I will not be describing in detail the process of getting the Spotify API set up. I promise you, if you follow just this guide, you will get things wrong.
 
-### Setting up the Webserver
+### Setting up Spotify API
 
-Before dealing with Spotify, let's do some setup on our web server. 
+Go to https://developer.spotify.com/dashboard/ and log in with your spotify account. Click create an app, and enter the required details. One note is for now, make the redirect uri the localhost (http://localhost:8000). It is required to create the app, but we will be able to change it later. Check the boxes next to Web API and MAYBE Web SDK.
+
+Once you have created the app, go to settings and sit there till we move on to the next step.
+
+### Setting up the Server
+Now let's do some setup on our web server. 
 
 First, create a new Django app to deal handle interacting with spotify.
 
@@ -2047,4 +2052,28 @@ To credentials.py add the fields we need for the api.
 CLIENT_ID = ""
 CLIENT_SECRET = ""
 REDIRECT_URI = ""
+```
+
+Paste in your own client id and secret from the settings page. Leave redirect_uri blank for now. 
+
+Like Tim says in the video, for sensitive information like this it is better to use environment variables, rather than in a file like this. However, he does not use them for the tutorial, so I will not either. If you are using this tutorial to build something for yourself, definetly look into environment variables instead. If you are following simply to learn, using the file is fine.
+
+### The First View
+
+Go to spotify/views.py. Here , we will create the first view to authenticate our application with spotify.
+
+Import everything.
+
+```python
+from .credentials import REDIRECT_URI, CLIENT_ID, CLIENT_SECRET
+from rest_framework.views import APIView
+from requests import Request, post
+```
+
+Create the view.
+
+```python
+class AuthURL(APIView):
+    def get(self, request, format=None):
+        pass
 ```
