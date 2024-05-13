@@ -3,14 +3,12 @@ import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react"; 
 import { Button, Grid, Typography, TextField, FormHelperText, FormControl, Radio, RadioGroup, FormControlLabel } from "@mui/material";
 
- export default function CreateRoom(){
-    // Default amount of votes to skip a song
-    const defaultVotes = 1;
+ export default function CreateRoom({votesToSkip=1, guestCanPause=true, update=false, roomCode=null, updateCallback= ()=>{}}){
     
     // Create state and setState for the data we want to send
     const [state, setState] = useState({
-        guestCanPause: true, 
-        votesToSkip: defaultVotes
+        guestCanPause: guestCanPause,
+        votesToSkip: votesToSkip,
     });
 
     const navigate = useNavigate();

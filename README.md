@@ -1788,3 +1788,76 @@ Because of this, we need to import CreateRoom.
 import CreateRoom from "./CreateRoom";
 ```
 
+Our settings page will be the same as the create room page, with the addition of a button to go back to the room page.
+
+```javascript
+function renderSettings(){
+    return (
+        <Grid container spacing={1} align="center">
+        <Grid item xs={12}>
+            <CreateRoom 
+                update={true} 
+                votesToSkip={state.votesToSkip} 
+                guestCanPause={state.guestCanPause} 
+                roomCode={state.roomCode}
+            />
+        </Grid>
+        <Grid item xs={12}>
+            <Button variant='outlined' color="secondary" onClick={() => updateShowSettings(false)}>Close</Button>
+        </Grid>
+    </Grid>
+    );
+}
+```
+
+We will be adding more props to the CreateRoom component, but we won't make them until next section, so for now I have ommited them. 
+
+Finally, to be able to see the settings, we write an if statement to call the renderSettings() function when the showSettings state variable is true.
+
+```javascript
+if (state.showSettings){
+    return renderSettings()
+}
+```
+
+Now you should be able to click on the settings button and see the create room page pop up. Next section, we will fix the create room page to show us the settings if we want to.
+
+## Tutorial Twelve - React Default Props and Callbacks
+
+https://www.youtube.com/watch?v=YDgZd9i3le4&list=PLzMcBGfZo4-kCLWnGmK0jUBmGLaJxvi4j&index=12
+
+### Props on the Create Room Page
+
+In the video, Tim creates a static variable called defaultProps to hold all the default values he wants. What we can do instead is define the props and their defaults in the function itself, and then when we call this CreateRoom component, we can specify values for those props or continue with the defaults.
+
+What this looks like is adding an object when we define the function, and this object will hold all of the props.
+
+```javascript
+export default function CreateRoom({votesToSkip=1, guestCanPause=true, update=false, roomCode=null, updateCallback= ()=>{}})
+```
+
+This syntax is called 'destructuring', since we define each prop seperatly. If we didn't need to define defaults, we could instead use this syntax:
+
+```javascript
+export default function CreateRoom(props)
+```
+
+The way props work with functional components is that we don't need to know how the props are used in the parent component. We could simply call 
+
+```javascript
+<CreateRoom votesToSkip={2} />
+```
+
+Now, in the CreateRoom.js, everytime we used props.votesToSkip, it would fill in the value. Since we want to have default values, we will go with the destructuring syntax this time.
+
+Our task is to change the code in the CreateRoom.js to use these new props. 
+
+First, in the state.
+
+```javascript
+const [state, setState] = useState({
+    guestCanPause: guestCanPause,
+    votesToSkip: votesToSkip,
+});
+```
+
