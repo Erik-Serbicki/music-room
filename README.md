@@ -1726,7 +1726,7 @@ class UpdateView(APIView):
                 return Response({"msg":"You are not the host"}, status=status.HTTP_403_FORBIDDEN)
             
             room.guest_can_pause = guest_can_pause
-            room.votes_to_skip
+            room.votes_to_skip = votes_to_skip
             room.save(update_fields=['guest_can_pause', 'votes_to_skip'])
             
             return Response(serializers.RoomSerializer(room).data, status=status.HTTP_200_OK)
@@ -1799,7 +1799,7 @@ function renderSettings(){
                 update={true} 
                 votesToSkip={state.votesToSkip} 
                 guestCanPause={state.guestCanPause} 
-                roomCode={state.roomCode}
+                roomCode={roomCode}
             />
         </Grid>
         <Grid item xs={12}>
@@ -1873,6 +1873,12 @@ defaultValue={votesToSkip}
 
 will set the default value of the text input field as whatever was passed through as a prop. Since this is the default value of the text field, we do not want this to change as the state updates.
 
+And, in the RadioGroup component,
+
+```javascript
+defaultValue={guestCanPause}
+```
+
 ### Changing CreateRoom Based on Props
 
 We want the look of the CreateRoom page to change depending on if we have called it in the home page, or as the settings menu. We will now add logic to change the rendered components depending on the value of the 'update' prop.
@@ -1919,3 +1925,64 @@ Here we have only changed the text of the button, but next we will create a new 
 ```javascript
 { update ? renderSettingsButtons() : renderCreateButtons() }
 ```
+
+Lastly, lets add a function to make the 'save' button actually work.
+
+```javascript
+function handleSaveButtonPressed(){
+    // Set the options for the request: method, content type, and actual data in the body
+    const requestOptions = {
+        method: "PATCH",
+        headers: {"Content-Type" : "application/json"},
+        body: JSON.stringify({
+            votes_to_skip: state.votesToSkip,
+            guest_can_pause: state.guestCanPause,
+            code: roomCode,
+        }),
+    };
+
+    // fetch to the endpoint we want, take the response we get, and navigate to room page
+    fetch("/api/update-room", requestOptions).then( 
+        (response) => {
+            if (response.ok) {
+                setState(prevState => ({
+                    ...prevState, msg: "Settings Saved!",
+                }));
+            } else {
+                setState(prevState => ({
+                    ...prevState, msg: response.statusText,
+                }));
+            }
+        });
+}
+```
+
+Add the 'msg' property to the state
+
+```javascript
+const [state, setState] = useState({
+    guestCanPause: guestCanPause,
+    votesToSkip: votesToSkip,
+    msg: '',
+});
+
+```
+
+And change the onClick property of the button in the renderSettingsButtons() function.
+
+```javascript
+onClick={handleSaveButtonPressed}
+```
+
+To show the message on screen, Tim uses the Collapse component from materialUI. Let's go ahead and import that. Simply add 'Collapse' to the import statement from "@mui/material"
+
+To use it, we will create a new Grid item at the top of the return statement.
+
+```javascript
+<Grid item xs={12}>
+    <Collapse in={state.msg != ''}>
+        { state.msg }
+    </Collapse>
+</Grid>
+```
+

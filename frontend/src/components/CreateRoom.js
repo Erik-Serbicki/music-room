@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react"; 
-import { Button, Grid, Typography, TextField, FormHelperText, FormControl, Radio, RadioGroup, FormControlLabel } from "@mui/material";
+import { Button, Grid, Typography, TextField, FormHelperText, FormControl, Radio, RadioGroup, FormControlLabel, Collapse } from "@mui/material";
 
  export default function CreateRoom({votesToSkip=1, guestCanPause=true, update=false, roomCode=null, updateCallback= ()=>{}}){
     
@@ -52,8 +52,8 @@ import { Button, Grid, Typography, TextField, FormHelperText, FormControl, Radio
             method: "PATCH",
             headers: {"Content-Type" : "application/json"},
             body: JSON.stringify({
-                votes_to_skip: state.votesToSkip,
                 guest_can_pause: state.guestCanPause,
+                votes_to_skip: state.votesToSkip,
                 code: roomCode,
             }),
         };
@@ -67,7 +67,7 @@ import { Button, Grid, Typography, TextField, FormHelperText, FormControl, Radio
                     }));
                 } else {
                     setState(prevState => ({
-                        ...prevState, msg: response.statusText,
+                        ...prevState, msg: `${response.status}: ${response.statusText}`,
                     }));
                 }
             });
@@ -94,6 +94,11 @@ import { Button, Grid, Typography, TextField, FormHelperText, FormControl, Radio
 
     return (
         <Grid container rowSpacing={3} >
+            <Grid item xs={12}>
+                <Collapse in={state.msg != ''}>
+                    { state.msg }
+                </Collapse>
+            </Grid>
             <Grid item xs={12} align={"center"} >
                 <Typography component="h2" variant="h2">
                     {title}
@@ -104,7 +109,7 @@ import { Button, Grid, Typography, TextField, FormHelperText, FormControl, Radio
                     <FormHelperText>
                         Guest Control of Playback State
                     </FormHelperText>
-                    <RadioGroup row defaultValue={true} onChange={handleGuestChange}>
+                    <RadioGroup row defaultValue={guestCanPause} onChange={handleGuestChange}>
                         <FormControlLabel value={true} control={<Radio color="primary" />} label="Play/Pause" labelPlacement="bottom"/>
                         <FormControlLabel value={false} control={<Radio color="secondary" />} label="No Control" labelPlacement="bottom"/>
                     </RadioGroup>
