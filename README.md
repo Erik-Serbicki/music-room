@@ -2477,3 +2477,21 @@ class CurrentSong(APIView):
         
         return Response({'Error':'Room Does Not Exist'}, status=status.HTTP_404_NOT_FOUND)
 ```
+
+### Displaying the Information on the Frontend
+
+All of the information that we return in that response will be stored in the state of our Room page.
+
+```javascript
+const [state, setState] = useState({
+    guestCanPause: false, 
+    votesToSkip: 1,
+    isHost: false,
+    showSettings: false,
+    spotifyAuthenticated: false,
+    song: {}, // NEW CODE
+});
+```
+
+Also, you can choose to delete or keep the votes/host/pause printout. You could display those nicely somewhere on the page, or just get rid of them entirely. For now, I will delete them, but might bring at least the votes to skip back at the end. Since this is part of the state, it is really easy to display it in a componenet whenever we want to. We have done the hard work of setting it up, no we can do the fun part of making the website look pretty.
+

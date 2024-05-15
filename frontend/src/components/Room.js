@@ -12,6 +12,7 @@ export default function Room(){
         isHost: false,
         showSettings: false,
         spotifyAuthenticated: false,
+        song: {},
     });
 
     let { roomCode } = useParams();
@@ -104,11 +105,6 @@ export default function Room(){
         <Grid container spacing={1} align="center">
             <Grid item xs={12}>
                 <Typography variant="h4" component="h4"> Room: {roomCode}</Typography>
-            </Grid>
-            <Grid item xs={12}>
-                <p>Votes: {state.votesToSkip}</p>
-                <p>Pause: {state.guestCanPause.toString()}</p>
-                <p>Host: {state.isHost.toString()}</p>
             </Grid>
             {state.isHost ? renderSettingsButton() : null}
             <Grid item xs={12}>
