@@ -2113,3 +2113,32 @@ urlpatterns = [
     path('get-auth-url', views.AuthURL.as_view())
 ]
 ```
+
+Let's also add the spotify django app to the urls.py of the main project. For me, that is in music_controller/urls.py.
+
+```python
+path('spotify/', include('spotify.urls'))
+```
+
+Next, we create a callback function to send a request to get the access and refresh tokens.
+
+```python
+def spotify_callback(request, format=None):
+    code = request.GET.get('code')
+    error = request.GET.get('error')
+    
+    response = post('https://accounts.spotify.com/api/token', data={
+        'grant_type':"authorization_code",
+        'code':code,
+        'redirect_uri':REDIRECT_URI,
+        'client_id': CLIENT_ID,
+        'client_secret': CLIENT_SECRET
+    }).json()
+    
+    access_token = response.get('access_token')
+    token_type = response.get('token_type')
+    refresh_token = response.get('refresh_token')
+    expires_in = response.get('expires_in')
+    error = response.get('error')
+```
+
