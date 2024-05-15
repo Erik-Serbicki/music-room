@@ -2058,6 +2058,14 @@ Paste in your own client id and secret from the settings page. Leave redirect_ur
 
 Like Tim says in the video, for sensitive information like this it is better to use environment variables, rather than in a file like this. However, he does not use them for the tutorial, so I will not either. If you are using this tutorial to build something for yourself, definetly look into environment variables instead. If you are following simply to learn, using the file is fine.
 
+Lastly, make sure to add the new django app to the list of installed apps.
+
+In music_controller/settings.py, go to the list of installed apps and add
+
+```python
+"spotify.apps.SpotifyConfig",
+```
+
 ### The First View
 
 Go to spotify/views.py. Here , we will create the first view to authenticate our application with spotify.
@@ -2142,3 +2150,68 @@ def spotify_callback(request, format=None):
     error = response.get('error')
 ```
 
+Make sure this function is not in the AuthURL class.
+
+Essentially, the AuthURL will autohrize our app and return a response in the form of a code, which we use here in this function to get the tokens.
+
+### Model to Store the Tokens
+
+Now, we need to store the tokens. But, we will need to store tokens for each user, and so we will create a model.
+
+Navigate to spitify/models.py, and create a new model to store the access tokens.
+
+```python
+class SpotifyToken(models.Model):
+    user = models.CharField(max_length=50, unique=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    refresh_token = models.CharField(max_length=150)
+    access_token = models.CharField(max_length=150)
+    expires_in = models.DateTimeField()
+    token_type = models.CharField(max_length=50)
+```
+
+Since we have made changes to our models, we now need to make a migration.
+
+```bash
+python manage.py makemigrations
+python manage.py migrate
+```
+
+### Saving the Tokens
+
+Here Tim makes a new file in spotify/ called utils.py to store some functions in, instead of doing everything in views.py. You could also create a new file, or you could create all these functions in views.py if you wanted. I will go along with the video and create a new file, but it is up to you whether or not to follow along.
+
+First, import the model we just made.
+
+```python
+from .models import SpotifyToken
+```
+
+Next, make a function to get a users tokens. We will use this to check if they already have tokens, and if they do, to retreive them so we can update them.
+
+```python
+def get_user_tokens(session_key):
+    user_tokens = SpotifyToken.objects.filter(user=session_key)
+    if user_tokens.exists() : return user_tokens[0]
+    return None
+```
+
+If no user tokens exist, this function will return None. Otherwise, it will return the tokens.
+
+Now, we can use that in a nother function to either update an existing entry in the database, or create a new one.
+
+```python
+def handle_user_tokens(session_key, access_token, token_type, expires_in, refresh_token):
+    tokens = get_user_tokens(session_key)
+    expires_in = timezone.now() + timedelta(seconds=expires_in)
+    
+    if tokens:
+        tokens.access_token = access_token
+        tokens.refresh_token = refresh_token
+        tokens.expires_in = expires_in
+        tokens.token_type = token_type
+        tokens.save(update_fields=['access_token', 'refresh_token', 'expires_in', 'token_type'])
+    else:
+        tokens = SpotifyToken(user=session_key, access_token=access_token, refresh_token=refresh_token, token_type=token_type, expires_in=expires_in)
+        tokens.save()
+```
