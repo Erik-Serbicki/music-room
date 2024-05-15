@@ -2230,6 +2230,8 @@ from .utils import handle_user_tokens
 And finally, go back to def spotify_callback(), and let's finish up that function with help from handle_user_tokens().
 
 ```python
+from django.shortcuts import redirect
+
 if not request.session.exists(request.session.session_key):
         request.session.create()
     
@@ -2238,14 +2240,30 @@ handle_user_tokens(request.session.session_key, access_token, token_type, expire
 return redirect('frontend:')
 ```
 
-### More Setup
+### Connecting the Backend to the Frontend
 
 Add the callback function to urls.py.
 
 ```python
-from django.shortcuts import redirect
-
 path('redirect', views.spotify_callback),
 ```
 
-To make our callback function actually redirect to 
+To make our callback function actually redirect to the frontend, we need to go frontend/urls.py and add some code just above the urlpatterns.
+
+```python
+app_name = 'frontend'
+```
+
+And in urlpatterns, add a name to the root path.
+
+```python
+path('', views.index, name=""),
+```
+
+
+Here, we are letting Django know that these urls belong to the app 'frontend', so our redirect will take us here. Specifically, it will take us to the root page, because in the callback function, we didnt specify any url past the colon. 
+
+### Finishing the Backend
+
+Next, we have to write a few more utility functions for specific things. I will just add a code snippet of all the new functions. Definetly watch the video if you are confused about any of these functions.
+
