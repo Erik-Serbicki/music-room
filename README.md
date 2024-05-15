@@ -2029,7 +2029,7 @@ As remarked at the beginning of the video, this section is the most complex, wit
 
 ### Setting up Spotify API
 
-Go to https://developer.spotify.com/dashboard/ and log in with your spotify account. Click create an app, and enter the required details. One note is for now, make the redirect uri the localhost (http://localhost:8000). It is required to create the app, but we will be able to change it later. Check the boxes next to Web API and MAYBE Web SDK.
+Go to https://developer.spotify.com/dashboard/ and log in with your spotify account. Click create an app, and enter the required details. One note is for now, make the redirect uri the localhost with some extra stuff (https://localhost:8000/spotify/redirect). It is required to create the app, but we will be able to change it later. Check the boxes next to Web API and MAYBE Web SDK.
 
 Once you have created the app, go to settings and sit there till we move on to the next step.
 
@@ -2051,10 +2051,10 @@ To credentials.py add the fields we need for the api.
 ```python
 CLIENT_ID = ""
 CLIENT_SECRET = ""
-REDIRECT_URI = ""
+REDIRECT_URI = "https://localhost:8000/spotify/redirect"
 ```
 
-Paste in your own client id and secret from the settings page. Leave redirect_uri blank for now. 
+Paste in your own client id and secret from the settings page. The redirect uri will make sense later, essentially its just the url to redirect the user to after they have connected to spotify.
 
 Like Tim says in the video, for sensitive information like this it is better to use environment variables, rather than in a file like this. However, he does not use them for the tutorial, so I will not either. If you are using this tutorial to build something for yourself, definetly look into environment variables instead. If you are following simply to learn, using the file is fine.
 
@@ -2324,3 +2324,45 @@ spotifyAuthenticated: false,
 ```
 
 Create a new function to authenticate with spotify when loading the page.
+
+```javascript
+function authenticateSpotify(){
+    fetch('/spotify/is-authenticated').then((response) => response.json()).then((data) => {
+        setState(prevState => ({
+            ...prevState,
+            spotifyAuthenticated: data.status,
+        }));
+        if (!data.status){
+            fetch('/spotify/get-auth-url').then((response) => response.json()).then((data) => {
+                window.location.replace(data.url);
+            });
+        }
+    });
+}
+```
+
+This will redirect the page to the spotify login page, once the user logs in and allows the site to access their spotify account, it will redirect back to the redirect uri we specified earlier.
+
+We want to call this function after we have set the state in getRoomDetails().
+
+```javascript
+function getRoomDetails(){
+    fetch(`/api/get-room?code=${roomCode}`).then((response)=>
+        response.json()
+    ).then((data) => {
+        setState(prevState => ({ 
+            ...prevState,
+            votesToSkip: data.votes_to_skip,
+            guestCanPause: data.guest_can_pause,
+            isHost: data.is_host,
+        }));
+
+        // NEW CODE
+        if (data.is_host){
+            authenticateSpotify();
+        }
+
+    });
+}
+```
+
