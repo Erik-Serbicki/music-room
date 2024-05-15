@@ -2300,3 +2300,27 @@ def refresh_spotify_token(session_key):
 
 Lastly, we need to make one more view to tell the frontend if we are authenticated. Right now the is_spotify_authenticated() function returns true or false, now we need to create a view that will send a response to the frontend.
 
+```python
+class IsAuthenticated(APIView):
+    def get(self, request, format=None):
+        is_authenticated = is_spotify_authenticated(self.request.session.session_key)
+        return Response({'status': is_authenticated}, status=status.HTTP_200_OK)
+```
+
+Remember to import is_spotify_authenticated() from .utils.
+
+Add the view to urls.py.
+
+```python
+path('is-authenticated', views.IsAuthenticated.as_view())
+```
+
+### Frontend
+
+Go to Room.js, and here we will add a new state variable.
+
+```javascript
+spotifyAuthenticated: false,
+```
+
+Create a new function to authenticate with spotify when loading the page.

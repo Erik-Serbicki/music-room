@@ -13,7 +13,6 @@ export default function HomePage(){
             element: renderHomeScreen(),
             loader: async () => {
                 const code = await fetch('/api/user-in-room').then((response) => response.json().then((data) => data.code));
-                console.log(code);
                 return code ? (redirect(`/room/${code}`)) : renderHomeScreen();
             }
         },
