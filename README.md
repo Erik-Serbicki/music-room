@@ -2505,6 +2505,8 @@ function getCurrentSong(){
             ...prevState,
             song: data,
         }));
-    })
+        console.log(data); // To print out if we want to debug
+    });
 }
 ```
+

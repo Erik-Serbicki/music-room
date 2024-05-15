@@ -22,6 +22,10 @@ export default function Room(){
     useEffect(() => {
         getRoomDetails();
         getCurrentSong();
+
+        let id = setTimeout(getCurrentSong(), 1000);
+        return () => clearTimeout(id);
+
     }, []);
 
     function getRoomDetails(){
@@ -67,8 +71,9 @@ export default function Room(){
                 ...prevState,
                 song: data,
             }));
+            console.log(data);
         });
-        console.log(state.song);
+        
     }
 
     function goHome(){
