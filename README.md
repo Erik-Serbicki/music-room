@@ -2293,7 +2293,6 @@ def refresh_spotify_token(session_key):
     access_token = response.get('access_token')
     token_type = response.get('token_type')
     expires_in = response.get('expires_in')
-    refresh_token = response.get('refresh_token')
     
     handle_user_tokens(session_key, access_token, token_type, expires_in, refresh_token)
 ```
@@ -2456,7 +2455,7 @@ class CurrentSong(APIView):
             
             # Deal with edge case of multiple artists
             artist_string = ''
-            for i, artist in enumerate(item.get('artist')):
+            for i, artist in enumerate(item.get('artists')):
                 if i > 0:
                     artist_string += ', '
                 name =artist.get('name')
@@ -2495,3 +2494,17 @@ const [state, setState] = useState({
 
 Also, you can choose to delete or keep the votes/host/pause printout. You could display those nicely somewhere on the page, or just get rid of them entirely. For now, I will delete them, but might bring at least the votes to skip back at the end. Since this is part of the state, it is really easy to display it in a componenet whenever we want to. We have done the hard work of setting it up, no we can do the fun part of making the website look pretty.
 
+Let's make a function to return the json data.
+
+```javascript
+function getCurrentSong(){
+    fetch('/spotify/current-song').then((response) => {
+        response.ok ? response.json : {}
+    }).then((data) => {
+        setState(prevState => ({ 
+            ...prevState,
+            song: data,
+        }));
+    })
+}
+```

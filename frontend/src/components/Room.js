@@ -21,9 +21,8 @@ export default function Room(){
 
     useEffect(() => {
         getRoomDetails();
+        getCurrentSong();
     }, []);
-
-    
 
     function getRoomDetails(){
         fetch(`/api/get-room?code=${roomCode}`).then((response)=>
@@ -53,6 +52,23 @@ export default function Room(){
                 });
             }
         });
+    }
+
+    function getCurrentSong(){
+        fetch('/spotify/current-song').then((response) => {
+            if(!response.ok){
+                return {};
+            }
+            else{
+                return response.json();
+            }
+        }).then((data) => {
+            setState(prevState => ({ 
+                ...prevState,
+                song: data,
+            }));
+        });
+        console.log(state.song);
     }
 
     function goHome(){

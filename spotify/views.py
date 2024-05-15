@@ -27,7 +27,7 @@ def spotify_callback(request, format=None):
     
     response = post('https://accounts.spotify.com/api/token', data={
         'grant_type':"authorization_code",
-        'code':code,
+        'code': code,
         'redirect_uri':REDIRECT_URI,
         'client_id': CLIENT_ID,
         'client_secret': CLIENT_SECRET
@@ -62,7 +62,7 @@ class CurrentSong(APIView):
             response = execute_spotify_api_request(host, endpoint)
             
             if 'error' in response or 'item' not in response:
-                return Response({}, status=status.HTTP_204_NO_CONTENT)
+                return Response({f"{response.get('error').get('status')}": f" {response.get('error').get('message')}"}, status=status.HTTP_204_NO_CONTENT)
 
             item = response.get('item')
             duration = item.get('duration_ms')
@@ -73,7 +73,7 @@ class CurrentSong(APIView):
             
             # Deal with edge case of multiple artists
             artist_string = ''
-            for i, artist in enumerate(item.get('artist')):
+            for i, artist in enumerate(item.get('artists')):
                 if i > 0:
                     artist_string += ', '
                 name =artist.get('name')
