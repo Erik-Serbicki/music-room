@@ -2267,3 +2267,36 @@ Here, we are letting Django know that these urls belong to the app 'frontend', s
 
 Next, we have to write a few more utility functions for specific things. I will just add a code snippet of all the new functions. Definetly watch the video if you are confused about any of these functions.
 
+```python
+from .credentials import CLIENT_ID, CLIENT_SECRET
+from requests import post
+
+def is_spotify_authenticated(session_key):
+    tokens = get_user_tokens(session_key)
+    if tokens:
+        expiry = tokens.expires_in
+        if expiry <= timezone.now():
+            refresh_spotify_token(session_key)
+        return True
+    return False
+
+def refresh_spotify_token(session_key):
+    refresh_token = get_user_tokens(session_key).refresh_token
+    
+    response = post("https://accounts.spotify.com/api/token", data={
+        'grant_type':'refresh_token',
+        'refresh_token':refresh_token,
+        'client_id': CLIENT_ID,
+        'client_secret':CLIENT_SECRET
+    }).json()
+    
+    access_token = response.get('access_token')
+    token_type = response.get('token_type')
+    expires_in = response.get('expires_in')
+    refresh_token = response.get('refresh_token')
+    
+    handle_user_tokens(session_key, access_token, token_type, expires_in, refresh_token)
+```
+
+Lastly, we need to make one more view to tell the frontend if we are authenticated. Right now the is_spotify_authenticated() function returns true or false, now we need to create a view that will send a response to the frontend.
+

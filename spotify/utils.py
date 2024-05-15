@@ -24,12 +24,13 @@ def handle_user_tokens(session_key, access_token, token_type, expires_in, refres
         tokens.save()
 
 
-def is_sotify_authenticated(session_key):
+def is_spotify_authenticated(session_key):
     tokens = get_user_tokens(session_key)
     if tokens:
         expiry = tokens.expires_in
         if expiry <= timezone.now():
             refresh_spotify_token(session_key)
+        return True
     return False
 
 def refresh_spotify_token(session_key):
