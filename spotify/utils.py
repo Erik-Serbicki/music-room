@@ -67,4 +67,4 @@ def execute_spotify_api_request(session_key, endpoint, post_=False, put_=False):
     try:
         return response.json()
     except:
-        return {'Error':'Bad Request'}
+        return {'Error': response.status_code}

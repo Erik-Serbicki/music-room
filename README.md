@@ -2366,3 +2366,114 @@ function getRoomDetails(){
 }
 ```
 
+## Tutorial Fourteen - Using the Spotify API
+
+https://www.youtube.com/watch?v=R-22NeS-P2c&list=PLzMcBGfZo4-kCLWnGmK0jUBmGLaJxvi4j&index=14
+
+### Get Song Information
+
+We will create a new view to get the information of the currently playing song, but first lets make a utils function to request information generally from spotify.
+
+First, add a variable that will be the root point for accessing the Spotify api at the top of utils.py, and add 'put' and 'get' to the requests import.
+
+```python
+from requests import post, put, get
+
+BASE_URL = 'https://api.spotify.com/v1/me/'
+```
+
+Next, the function to send requests.
+
+```python
+def execute_spotify_api_request(session_key, endpoint, post_=False, put_=False):
+    tokens = get_user_tokens(session_key)
+    headers = {'Content-Type':'application/json', 'Authorization': f'Bearer {tokens.access_token}'}
+    
+    if post_: 
+        post(BASE_URL + endpoint, headers=headers)
+    
+    if put_:
+        put(BASE_URL + endpoint, headers=headers)
+        
+    response = get(BASE_URL + endpoint, {}, headers=headers)
+    
+    try:
+        return response.json()
+    except:
+        return {'Error':response.status_code}
+```
+
+Set up the view to handle getting the current song information.
+
+```python
+class CurrentSong(APIView):
+    def get(self, request, format=None):
+        room_code = self.request.session.get('room_code')
+        room = Room.objects.filter(code=room_code)
+        if room.exists():
+            room = room[0]
+            host = room.host
+            endpoint = 'player/currently-playing'
+            response = execute_spotify_api_request(host, endpoint)
+            return Response(response, status=status.HTTP_200_OK)
+        return Response({'Error':'Room Does Not Exist'}, status=status.HTTP_404_NOT_FOUND)
+```
+
+For now let's print out the response so we can see what we are dealing with.
+
+Don't forget to add this view to urls.py.
+
+At this point you can test the website by playing a song on spotify, opening a room on the website, then navigating to /spotify/current-song. This page should give you a json of all the information in the response.
+
+### Parsing Through the API Response
+
+Now that we are able to get a response from the Spotify API, we have to figure out what information we want in the frontend.
+
+You can also go to the documentation to see what keys are important.
+
+This is the updated CurrentSong view.
+
+```python
+class CurrentSong(APIView):
+    def get(self, request, format=None):
+        room_code = self.request.session.get('room_code')
+        room = Room.objects.filter(code=room_code)
+        if room.exists():
+            room = room[0]
+            host = room.host
+            endpoint = 'player/currently-playing'
+            response = execute_spotify_api_request(host, endpoint)
+            
+            if 'error' in response or 'item' not in response:
+                return Response({}, status=status.HTTP_204_NO_CONTENT)
+
+            item = response.get('item')
+            duration = item.get('duration_ms')
+            progress = response.get('progress_ms')
+            album_cover = item.get('album').get('images')[0].get('url')
+            is_playing = response.get('is_playing')
+            song_id = item.get('id')
+            
+            # Deal with edge case of multiple artists
+            artist_string = ''
+            for i, artist in enumerate(item.get('artist')):
+                if i > 0:
+                    artist_string += ', '
+                name =artist.get('name')
+                artist_string += name
+            
+            song = {
+                'title': item.get('name'),
+                'artist': artist_string,
+               ' duration': duration,
+                'time': progress,
+                'img_url': album_cover,
+                'is_playing': is_playing,
+                'votes':0,
+                'id': song_id
+            }
+            
+            return Response(song, status=status.HTTP_200_OK)
+        
+        return Response({'Error':'Room Does Not Exist'}, status=status.HTTP_404_NOT_FOUND)
+```
