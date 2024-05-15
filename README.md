@@ -2201,6 +2201,9 @@ If no user tokens exist, this function will return None. Otherwise, it will retu
 Now, we can use that in a nother function to either update an existing entry in the database, or create a new one.
 
 ```python
+from django.utils import timezone
+from datetime import timedelta
+
 def handle_user_tokens(session_key, access_token, token_type, expires_in, refresh_token):
     tokens = get_user_tokens(session_key)
     expires_in = timezone.now() + timedelta(seconds=expires_in)
@@ -2215,3 +2218,34 @@ def handle_user_tokens(session_key, access_token, token_type, expires_in, refres
         tokens = SpotifyToken(user=session_key, access_token=access_token, refresh_token=refresh_token, token_type=token_type, expires_in=expires_in)
         tokens.save()
 ```
+
+### Using utils.py
+
+Back in views.py, import the function we just made.
+
+```python
+from .utils import handle_user_tokens
+```
+
+And finally, go back to def spotify_callback(), and let's finish up that function with help from handle_user_tokens().
+
+```python
+if not request.session.exists(request.session.session_key):
+        request.session.create()
+    
+handle_user_tokens(request.session.session_key, access_token, token_type, expires_in, refresh_token)
+
+return redirect('frontend:')
+```
+
+### More Setup
+
+Add the callback function to urls.py.
+
+```python
+from django.shortcuts import redirect
+
+path('redirect', views.spotify_callback),
+```
+
+To make our callback function actually redirect to 
