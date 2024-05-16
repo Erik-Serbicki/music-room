@@ -93,3 +93,31 @@ class CurrentSong(APIView):
             return Response(song, status=status.HTTP_200_OK)
         
         return Response({'Error':'Room Does Not Exist'}, status=status.HTTP_404_NOT_FOUND)
+
+class PauseSong(APIView):
+    def put(self, response, format=None):
+        room_code = self.request.session.get('room_code')
+        query = Room.objects.filter(code=room_code)
+        
+        if query.exists():
+            room = query[0]
+            
+            if self.request.session.session_key == room.host or room.guest_can_pause:
+                pause_song(room.host)
+                return Response({}, status=status.HTTP_204_NO_CONTENT)
+            return Response({}, status=status.HTTP_403_FORBIDDEN)
+        return Response({}, status=status.HTTP_404_NOT_FOUND)
+
+class PlaySong(APIView):
+    def put(self, response, format=None):
+        room_code = self.request.session.get('room_code')
+        query = Room.objects.filter(code=room_code)
+        
+        if query.exists():
+            room = query[0]
+            
+            if self.request.session.session_key == room.host or room.guest_can_pause:
+                play_song(room.host)
+                return Response({}, status=status.HTTP_204_NO_CONTENT)
+            return Response({}, status=status.HTTP_403_FORBIDDEN)
+        return Response({}, status=status.HTTP_404_NOT_FOUND)

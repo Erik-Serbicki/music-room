@@ -2464,7 +2464,7 @@ class CurrentSong(APIView):
             song = {
                 'title': item.get('name'),
                 'artist': artist_string,
-               ' duration': duration,
+                'duration': duration,
                 'time': progress,
                 'img_url': album_cover,
                 'is_playing': is_playing,
@@ -2566,7 +2566,7 @@ export default function MusicPlayer(props){
         <Card>
             <Grid container spacing={2} align='center'>
                 <Grid item xs={4}>
-                    <img src={props.image_url} height="100%" width="100%"/>
+                    <img src={props.img_url} height="100%" width="100%"/>
                 </Grid>
                 <Grid item xs={8}>
                     <Typography component='h5' variant='h5'>{props.title}</Typography>
@@ -2582,3 +2582,10 @@ export default function MusicPlayer(props){
     );
 }
 ```
+
+To see this component on screen, we need to add it to Room.js.
+
+```javascript
+import MusicPlayer from "./MusicPlayer";
+```
+
