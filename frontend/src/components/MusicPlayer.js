@@ -1,5 +1,5 @@
 import React from 'react';
-import { Grid, Typography, Card, IconButton, LinearProgress, IconButton} from "@mui/material";
+import { Grid, Typography, Card, IconButton, LinearProgress} from "@mui/material";
 import { PlayArrow, SkipNext, Pause} from "@mui/icons-material";
 
 export default function MusicPlayer(props){
@@ -10,7 +10,7 @@ export default function MusicPlayer(props){
         <Card>
             <Grid container spacing={2} align='center'>
                 <Grid item xs={4}>
-                    <img src={props.image_url} height="100%" width="100%"/>
+                    <img src={props.img_url} height="100%" width="100%"/>
                 </Grid>
                 <Grid item xs={8}>
                     <Typography component='h5' variant='h5'>{props.title}</Typography>

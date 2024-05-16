@@ -55,7 +55,7 @@ export default function Room(){
         });
     }
 
-    let spotifyTimeout = setTimeout(getCurrentSong, 2000);
+    let spotifyTimeout = setTimeout(getCurrentSong, 1000);
     function getCurrentSong(){
         fetch('/spotify/current-song').then((response) => {
             if(!response.ok){
@@ -129,7 +129,7 @@ export default function Room(){
             <Grid item xs={12}>
                 <Typography variant="h4" component="h4"> Room: {roomCode}</Typography>
             </Grid>
-            <MusicPlayer {...state.song}/>
+            <MusicPlayer align='center' {...state.song}/>
             {state.isHost ? renderSettingsButton() : null}
             <Grid item xs={12}>
                 <Button color='secondary' variant='outlined' onClick={goHome}> Home </Button>
