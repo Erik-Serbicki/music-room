@@ -4,6 +4,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { useEffect } from 'react';
 import { Grid, Button, Typography } from "@mui/material";
 import CreateRoom from "./CreateRoom";
+import MusicPlayer from "./MusicPlayer";
 
 export default function Room(){
     const [state, setState] = useState({
@@ -128,6 +129,7 @@ export default function Room(){
             <Grid item xs={12}>
                 <Typography variant="h4" component="h4"> Room: {roomCode}</Typography>
             </Grid>
+            <MusicPlayer {...state.song}/>
             {state.isHost ? renderSettingsButton() : null}
             <Grid item xs={12}>
                 <Button color='secondary' variant='outlined' onClick={goHome}> Home </Button>

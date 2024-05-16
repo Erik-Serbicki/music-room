@@ -1,5 +1,5 @@
 import React from 'react';
-import { Grid, Typography, Card, Iconbutton, LinearProgress, IconButton} from "@mui/material";
+import { Grid, Typography, Card, IconButton, LinearProgress, IconButton} from "@mui/material";
 import { PlayArrow, SkipNext, Pause} from "@mui/icons-material";
 
 export default function MusicPlayer(props){
