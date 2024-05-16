@@ -125,11 +125,11 @@ export default function Room(){
     }
 
     return (
-        <Grid container spacing={1} align="center">
+        <Grid container spacing={3} align="center">
             <Grid item xs={12}>
                 <Typography variant="h4" component="h4"> Room: {roomCode}</Typography>
             </Grid>
-            <MusicPlayer align='center' {...state.song}/>
+            <MusicPlayer {...state.song}/>
             {state.isHost ? renderSettingsButton() : null}
             <Grid item xs={12}>
                 <Button color='secondary' variant='outlined' onClick={goHome}> Home </Button>

@@ -8,11 +8,11 @@ export default function MusicPlayer(props){
 
     return(
         <Card>
-            <Grid container spacing={2} align='center'>
+            <Grid container spacing={3} align='center'>
                 <Grid item xs={4}>
                     <img src={props.img_url} height="100%" width="100%"/>
                 </Grid>
-                <Grid item xs={8}>
+                <Grid item xs={8} align='center'>
                     <Typography component='h5' variant='h5'>{props.title}</Typography>
                     <Typography color='textSecondary' variant='subtitle1'>{props.artist}</Typography>
                     <div>
