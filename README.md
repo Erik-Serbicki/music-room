@@ -2589,3 +2589,105 @@ To see this component on screen, we need to add it to Room.js.
 import MusicPlayer from "./MusicPlayer";
 ```
 
+Then, just put the component in the return statement wherever you want the music player to appear. I put it in between the title and the buttons.
+
+```javascript
+<MusicPlayer {...state.song}/>
+```
+
+Here, we use the spread operater to send each part of the object separately so that we can use them as props in MusicPlayer.
+
+## Tutorial Fifteen - Playing and Pausing
+
+https://www.youtube.com/watch?v=WvbU4B5hBFE&list=PLzMcBGfZo4-kCLWnGmK0jUBmGLaJxvi4j&index=15
+
+### Play and Pause Views
+
+To interact with the song and play/pause or skip, we need to send a request to the Spotify API. So, let's set up the views for playing and pausing the song.
+
+In spotify/views.py,
+
+```python
+class PauseSong(APIView):
+    def put(self, response, format=None):
+        room_code = self.request.session.get('room_code')
+        query = Room.objects.filter(code=room_code)
+        
+        if query.exists():
+            room = query[0]
+            
+            if self.request.session.session_key == room.host or room.guest_can_pause:
+                pause_song(room.host)
+                return Response({}, status=status.HTTP_204_NO_CONTENT)
+            return Response({}, status=status.HTTP_403_FORBIDDEN)
+        return Response({}, status=status.HTTP_404_NOT_FOUND)
+
+class PlaySong(APIView):
+    def put(self, response, format=None):
+        room_code = self.request.session.get('room_code')
+        query = Room.objects.filter(code=room_code)
+        
+        if query.exists():
+            room = query[0]
+            
+            if self.request.session.session_key == room.host or room.guest_can_pause:
+                play_song(room.host)
+                return Response({}, status=status.HTTP_204_NO_CONTENT)
+            return Response({}, status=status.HTTP_403_FORBIDDEN)
+        return Response({}, status=status.HTTP_404_NOT_FOUND)
+```
+
+These two classes are identical except the play/pause song functions, which we will write next. Tim mentions you could consolidate this to one function, but he keeps them separate, so I will as well.
+
+### Play/Pause Songs
+
+Head over to utils.py, and lets write the play and pause functions.
+
+```python
+def play_song(session_id):
+    return execute_spotify_api_request(session_id, "player/play", put_=True)
+
+def pause_song(session_id):
+    return execute_spotify_api_request(session_id, "player/pause", put_=True)
+```
+
+Pretty simple: since we already wrote the code to send any request, we just need to know the endpoint and request type for each action.
+
+Now add the urls to urls.py.
+
+```python
+path('play', PlaySong.as_view()),
+path('pause', PauseSong.as_view()),
+```
+
+### Adding Functionality to the Frontend
+
+Go to MusicPlayer.js, and lets hook up those views to the buttons.
+
+Add two functions to fetch to the endpoints we just creates.
+
+```javascript
+function pauseSong(){
+    const requestOptions = {
+        method: 'PUT',
+        headers: {'Content-Type':'application/json'}
+    };
+    fetch('/spotify/pause', requestOptions);
+}
+
+function playSong(){
+    const requestOptions = {
+        method: 'PUT',
+        headers: {'Content-Type':'application/json'}
+    };
+    fetch('/spotify/play', requestOptions);
+}
+```
+
+As Tim mentions, we could add some functionality to the fetch.then() if we wanted to alert the user if they actually aren't allowed to play/pause, so if you want to do that you can. As of now, if a user tries to play/pause but has no permission nothing will happen.
+
+lastly, add logic to the onClick of the IconButton to pause if the song is playing, and play if the song is paused.
+
+```javascript
+onClick={()=>{props.is_playing ? pauseSong() : playSong() }}
+```

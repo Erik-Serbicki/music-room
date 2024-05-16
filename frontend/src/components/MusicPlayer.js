@@ -6,6 +6,22 @@ export default function MusicPlayer(props){
 
     let songProgress = (props.time / props.duration) * 100
 
+    function pauseSong(){
+        const requestOptions = {
+            method: 'PUT',
+            headers: {'Content-Type':'application/json'}
+        };
+        fetch('/spotify/pause', requestOptions);
+    }
+
+    function playSong(){
+        const requestOptions = {
+            method: 'PUT',
+            headers: {'Content-Type':'application/json'}
+        };
+        fetch('/spotify/play', requestOptions);
+    }
+
     return(
         <Card>
             <Grid container spacing={3} align='center'>
@@ -16,7 +32,10 @@ export default function MusicPlayer(props){
                     <Typography component='h5' variant='h5'>{props.title}</Typography>
                     <Typography color='textSecondary' variant='subtitle1'>{props.artist}</Typography>
                     <div>
-                        <IconButton>{props.is_playing ? <Pause /> : <PlayArrow />}</IconButton>
+                        <IconButton 
+                            onClick={()=>{props.is_playing ? pauseSong() : playSong() }}>
+                            {props.is_playing ? <Pause /> : <PlayArrow />}
+                        </IconButton>
                         <IconButton><SkipNext /></IconButton>
                     </div>
                 </Grid>
