@@ -22,10 +22,6 @@ export default function Room(){
     useEffect(() => {
         getRoomDetails();
         getCurrentSong();
-
-        let id = setTimeout(getCurrentSong(), 1000);
-        return () => clearTimeout(id);
-
     }, []);
 
     function getRoomDetails(){
@@ -58,22 +54,27 @@ export default function Room(){
         });
     }
 
+    let spotifyTimeout = setTimeout(getCurrentSong, 2000);
     function getCurrentSong(){
         fetch('/spotify/current-song').then((response) => {
             if(!response.ok){
-                return {};
+                console.log(`${response.status}: ${response.statusText}`)
+                clearTimeout(spotifyTimeout);
+                return {}
             }
             else{
-                return response.json();
+                return response.json()
             }
         }).then((data) => {
             setState(prevState => ({ 
                 ...prevState,
                 song: data,
             }));
-            console.log(data);
+            console.log(data)
+            if (data == {}){
+                clearTimeout(spotifyTimeout);
+            }
         });
-        
     }
 
     function goHome(){

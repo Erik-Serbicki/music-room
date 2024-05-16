@@ -2510,3 +2510,35 @@ function getCurrentSong(){
 }
 ```
 
+Instead of using componentDidMount(), we will put our polling code in the useEffect() function. In addition, what I read said to use setTimeout() intstead of setInterval(), but I beleive that it doesn't matter a whole lot for a project of this scale.
+
+Basically, setInterval() will call a function repeatedly, every specified length of time, while setTimeout() will call a function once, after the length of time. So what we do here is setTimeout() for a second, and then immediatly clear it, so that it runs again.
+
+It does basically the same thing, but we have more control over when to stop the polling.
+
+I actually put this into the getCurrentSong() function, because then we can choose to stop the timeout if we don't get any resposne from the server, or if the response is bad, etc. 
+
+```javascript
+ let spotifyTimeout = setTimeout(getCurrentSong, 1000);
+
+function getCurrentSong(){
+    fetch('/spotify/current-song').then((response) => {
+        if(!response.ok){
+            clearTimeout(spotifyTimeout);
+            return {};
+        }
+        else{
+            return response.json();
+        }
+    }).then((data) => {
+        setState(prevState => ({ 
+            ...prevState,
+            song: data,
+        }));
+        if (data == {}){
+            clearTimeout(spotifyTimeout);
+        }
+    });
+    
+}
+```
