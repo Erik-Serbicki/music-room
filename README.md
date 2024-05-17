@@ -2728,3 +2728,12 @@ def skip_song(session_id):
 ```
 
 In this case, the endpoint we want is "player/next".
+
+Create a url for it, and then go to the frontend. 
+
+```python
+path('skip', SkipSong.as_view())
+```
+
+### Making the Skip Button Work
+
