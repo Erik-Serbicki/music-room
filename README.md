@@ -2691,3 +2691,40 @@ lastly, add logic to the onClick of the IconButton to pause if the song is playi
 ```javascript
 onClick={()=>{props.is_playing ? pauseSong() : playSong() }}
 ```
+
+## Tutorial Sixteen - Skipping the Song
+
+https://www.youtube.com/watch?v=Lsq9oRZ2WiU&list=PLzMcBGfZo4-kCLWnGmK0jUBmGLaJxvi4j&index=16
+
+### View to Skip Songs
+
+Go to spotify/views.py and makea new view to send a request to the API to skip a song.
+
+```python
+class SkipSong(APIView):
+    def post(self, request, format=None):
+        room_code = self.request.session.get('room_code')
+        query = Room.objects.filter(code=room_code)
+        
+        if query.exists():
+            room = query[0]
+            
+            if self.request.session.session_key == room.host:
+                skip_song(room.host)
+            else:
+                pass    
+            
+            return Response({}, status=status.HTTP_200_OK)
+        return Response({}, status=status.HTTP_404_NOT_FOUND)
+```
+
+Here we just check if the user is the host, and if they are, we automatically skip the song. We will add the voting system later.
+
+Let's now go to utils.py and write that skip_song() function. Just like the play and pause functions, we just need to send a request to the specific endpoint at the spotify api.
+
+```python
+def skip_song(session_id):
+    return execute_spotify_api_request(session_id, 'player/next', post_=True)
+```
+
+In this case, the endpoint we want is "player/next".
