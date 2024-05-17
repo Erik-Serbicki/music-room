@@ -121,3 +121,19 @@ class PlaySong(APIView):
                 return Response({}, status=status.HTTP_204_NO_CONTENT)
             return Response({}, status=status.HTTP_403_FORBIDDEN)
         return Response({}, status=status.HTTP_404_NOT_FOUND)
+
+class SkipSong(APIView):
+    def post(self, request, format=None):
+        room_code = self.request.session.get('room_code')
+        query = Room.objects.filter(code=room_code)
+        
+        if query.exists():
+            room = query[0]
+            
+            if self.request.session.session_key == room.host:
+                skip_song(room.host)
+            else:
+                pass    
+            
+            return Response({}, status=status.HTTP_200_OK)
+        return Response({}, status=status.HTTP_404_NOT_FOUND)
