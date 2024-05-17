@@ -2737,3 +2737,23 @@ path('skip', SkipSong.as_view())
 
 ### Making the Skip Button Work
 
+Make a new function in MusicPlayer.js.
+
+```javascript
+function skipSong(){
+    const requestOptions = {
+        method: 'POST',
+        headers: {'Content-Type':'application/json'}
+    };
+    fetch('/spotify/skip', requestOptions)
+}
+```
+
+Add the onClick property to the skip button.
+
+```javascript
+<IconButton onClick={() => skipSong()}><SkipNext /></IconButton> //MAYBE CHANGE
+```
+
+We will use the arrow function later, once we implement the voting, but for now you can have it just return the skipSong() function.
+
