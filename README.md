@@ -2824,9 +2824,10 @@ class SkipSong(APIView):
             
             # NEW CODE
             votes = Vote.objects.filter(room=room, song_id=room.current_song)
+            has_user_voted = Vote.objects.filter(user=self.request.session.session_key,room=room, song_id=room.current_song).exists()
             votes_needed = room.votes_to_skip
             
-            if self.request.session.session_key == room.host or len(votes) + 1 >= votes_needed: # NEW CODE
+            if self.request.session.session_key == room.host or (len(votes) + 1 >= votes_needed and not has_user_voted): # NEW CODE
                 votes.delete() # NEW CODE
                 skip_song(room.host)
             else:
@@ -2837,6 +2838,10 @@ class SkipSong(APIView):
             return Response({}, status=status.HTTP_200_OK)
         return Response({}, status=status.HTTP_404_NOT_FOUND)
 ```
+
+The extra stuff I added that Tim does not have in the video is just in the edge case that there are two votes needed. Before, with just Tim's code, if the room needed exactly two votes to skip, a non-host user could skip by pressing the skip button twice (because of the len(votes) + 1). Now, in that if statement, it also checks to see if the user has already voted.
+
+Now, this case also has a bug, in that if the settings change to allow only one vote to skip, the user will not be able to skip at all, because since they already voted, the if statement will not work. You could add code to the room so that when the settings change, the backend looks to see if the votes already voted are the new number needed. 
 
 The logic should work, but we want to actually be able to see the votes in the frontend.
 
@@ -2864,3 +2869,86 @@ Just add the votes list, changs 'votes' in the song to be the length of that lis
 
 Now, go to MusicPlayer.js, and lets display these parameters on the page.
 
+```javascript
+<IconButton onClick={skipSong}>
+    <SkipNext /> {props.votes} / {props.votes_required}
+</IconButton>
+```
+
+Here we just added plain text. You could make it smalled/beautify it more, but this is enough to get the point across. 
+
+# The End (maybe)
+
+There it is! The end of Tim's awesome tutorial series. I hope that my changes in the Javascript React portion made sense, and you learned a bit about functional components.
+
+Lastly, I might add some stuff to flesh it out a bit, but as this was intended to be a resource for people following the videos, I probably will not add much. The only extra thing I'll add is a default song component to display on the frontend while we haven't connected to Spotify.
+
+## Default Song Component
+
+There are many ways to go about this, the way I chose was to pass another prop to MusicPlayer and render a different card based on the value of that prop. First, in Room.js, the prop setup.
+
+I added a new property to the state.
+
+```javascript
+spotifyConnected: false,
+```
+
+I updated the state in the getCurrentSong() function, in the fetch.then(). I just added it to the code where we get the song data.
+
+```javascript
+setState(prevState => ({ 
+    ...prevState,
+    song: data,
+    spotifyConnected: true,
+}));
+```
+
+This way, regardless of the error on the backend side, if there is no song data, we display the other card.
+
+Lastly, I passed this into the MusicPlayer component using a double spread operator.
+
+```javascript
+{...{ ...state.song, spotifyConnected: state.spotifyConnected }}
+```
+
+In the actual MusicPlayer.js, I changed the return statement.
+
+```javascript
+return(
+    <div>
+        {props.spotifyConnected ? renderMusicPlayerSong() : renderMusicPlayerNoSong()}
+    </div>
+);
+```
+
+renderMusicPlayerSong() is the excact same code I had in the return statment, I just copy and pasted it into a new function. renderMusicPlayerNoSong() can be anything you want, I made it pretty much the same, but without a picture, and a title and artist saying they werent found. It does not look great, but it gets the idea across, and you can experiment and make it look as you want.
+
+If you want to copy my code, here is what I did.
+
+```javascript
+function renderMusicPlayerNoSong(){
+return (
+<Card >
+    <Grid container spacing={3} align='center' >
+        <Grid item xs={12}>
+            <Typography component='h5' variant='h5'>No Song Found</Typography>
+            <Typography color='textSecondary' variant='subtitle1'>No Artist Found</Typography>
+            <div>
+                <IconButton >
+                    <PlayArrow />
+                </IconButton>
+                <IconButton >
+                    <SkipNext /> 0/0
+                </IconButton>
+            </div>
+        </Grid>
+    </Grid>
+    <LinearProgress variant="determinate" value={100} />
+</Card>
+)
+}
+```
+
+Since the votes and votes required come from the backend, they won't show until we connect to Spotify. You could also change this if you want. One way could be when you pass the props to MusicPlayer in Room.js, you pass the votes to skip either from the state or state.song depending on if spotifyConnect is true. That way, you could display 0/votes_to_skip instead. I chose not to.
+
+# The End (for real)

@@ -14,6 +14,7 @@ export default function Room(){
         showSettings: false,
         spotifyAuthenticated: false,
         song: {},
+        spotifyConnected: false,
     });
 
     let { roomCode } = useParams();
@@ -70,6 +71,7 @@ export default function Room(){
             setState(prevState => ({ 
                 ...prevState,
                 song: data,
+                spotifyConnected: true,
             }));
             console.log(data)
             if (data == {}){
@@ -125,11 +127,13 @@ export default function Room(){
     }
 
     return (
-        <Grid container spacing={3} align="center">
-            <Grid item xs={12}>
-                <Typography variant="h4" component="h4"> Room: {roomCode}</Typography>
+        <Grid container spacing={4} align="center" direction="column" >
+            <Grid item xs={12} >
+                <Typography variant="h4" component="h4" > Room: {roomCode}</Typography>
             </Grid>
-            <MusicPlayer {...state.song}/>
+            <Grid item xs = {12}>
+                <MusicPlayer {...{ ...state.song, spotifyConnected: state.spotifyConnected }}/>
+            </Grid>
             {state.isHost ? renderSettingsButton() : null}
             <Grid item xs={12}>
                 <Button color='secondary' variant='outlined' onClick={goHome}> Home </Button>

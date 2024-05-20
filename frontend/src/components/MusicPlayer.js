@@ -1,6 +1,6 @@
 import React from 'react';
 import { Grid, Typography, Card, IconButton, LinearProgress} from "@mui/material";
-import { PlayArrow, SkipNext, Pause} from "@mui/icons-material";
+import { PlayArrow, SkipNext, Pause, BorderColor} from "@mui/icons-material";
 
 export default function MusicPlayer(props){
 
@@ -30,8 +30,9 @@ export default function MusicPlayer(props){
         fetch('/spotify/skip', requestOptions)
     }
 
-    return(
-        <Card>
+    function renderMusicPlayerSong(){
+        return (
+            <Card>
             <Grid container spacing={3} align='center'>
                 <Grid item xs={4}>
                     <img src={props.img_url} height="100%" width="100%"/>
@@ -52,5 +53,34 @@ export default function MusicPlayer(props){
             </Grid>
             <LinearProgress variant="determinate" value={songProgress} />
         </Card>
+        );
+    }
+
+    function renderMusicPlayerNoSong(){
+        return (
+        <Card >
+            <Grid container spacing={3} align='center' >
+                <Grid item xs={12}>
+                    <Typography component='h5' variant='h5'>No Song Found</Typography>
+                    <Typography color='textSecondary' variant='subtitle1'>No Artist Found</Typography>
+                    <div>
+                        <IconButton >
+                            <PlayArrow />
+                        </IconButton>
+                        <IconButton >
+                            <SkipNext /> 0/0
+                        </IconButton>
+                    </div>
+                </Grid>
+            </Grid>
+            <LinearProgress variant="determinate" value={100} />
+        </Card>
+        );
+    }
+
+    return(
+        <div>
+            {props.spotifyConnected ? renderMusicPlayerSong() : renderMusicPlayerNoSong()}
+        </div>
     );
 }
