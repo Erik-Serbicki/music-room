@@ -146,13 +146,15 @@ class SkipSong(APIView):
             
             # NEW CODE
             votes = Vote.objects.filter(room=room, song_id=room.current_song)
+            has_user_voted = Vote.objects.filter(user=self.request.session.session_key,room=room, song_id=room.current_song).exists()
             votes_needed = room.votes_to_skip
             
-            if self.request.session.session_key == room.host or len(votes) + 1 >= votes_needed: # NEW CODE
+            if self.request.session.session_key == room.host or (len(votes) + 1 >= votes_needed and not has_user_voted): # NEW CODE
                 votes.delete() # NEW CODE
                 skip_song(room.host)
             else:
                 # NEW CODE
+                
                 vote = Vote(user=self.request.session.session_key, room=room, song_id=room.current_song)
                 vote.save()   
             
