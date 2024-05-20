@@ -60,18 +60,25 @@ export default function Room(){
     function getCurrentSong(){
         fetch('/spotify/current-song').then((response) => {
             if(!response.ok){
-                console.log(`${response.status}: ${response.statusText}`)
+                setState(prevState => ({ 
+                    ...prevState,
+                    spotifyConnected: false,
+                }));
+                console.log(`${response.status}: ${response.statusText}`);
                 clearTimeout(spotifyTimeout);
                 return {}
             }
             else{
+                setState(prevState => ({ 
+                    ...prevState,
+                    spotifyConnected: true,
+                }));
                 return response.json()
             }
         }).then((data) => {
             setState(prevState => ({ 
                 ...prevState,
                 song: data,
-                spotifyConnected: true,
             }));
             console.log(data)
             if (data == {}){

@@ -2893,14 +2893,25 @@ I added a new property to the state.
 spotifyConnected: false,
 ```
 
-I updated the state in the getCurrentSong() function, in the fetch.then(). I just added it to the code where we get the song data.
+I updated the state in the getCurrentSong() function, in the fetch.then(). I updated the state if we get an ok response, and if we don't.
 
 ```javascript
-setState(prevState => ({ 
-    ...prevState,
-    song: data,
-    spotifyConnected: true,
-}));
+if(!response.ok){
+    setState(prevState => ({ 
+        ...prevState,
+        spotifyConnected: false,
+    }));
+    console.log(`${response.status}: ${response.statusText}`);
+    clearTimeout(spotifyTimeout);
+    return {}
+}
+else{
+    setState(prevState => ({ 
+        ...prevState,
+        spotifyConnected: true,
+    }));
+    return response.json()
+}
 ```
 
 This way, regardless of the error on the backend side, if there is no song data, we display the other card.
