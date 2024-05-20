@@ -2773,13 +2773,15 @@ class Vote(models.Model):
 Lastly, we will add one more thing to the original room model, in api/models.py. 
 
 ```python
-current_song = models.CharField(max_length=50)
+current_song = models.CharField(max_length=50, null=True)
 ```
 
-This is to keep track of which song the votes are for, so we can clear them when the song gets skipped or ends on its own.
+This is to keep track of which song the votes are for, so we can clear them when the song gets skipped or ends on its own. We have to put the null=True because we already have rooms in the database, and they don't have a current_song, so we need to tell Django that setting surrent_song to null is ok.
 
 Dont forget, we now need to make migrations and migrate, because we made changes to the model.
 
 ```bash
-
+python manage.py makemigrations
+python manage.py migrate
 ```
+

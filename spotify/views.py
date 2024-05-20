@@ -6,6 +6,7 @@ from rest_framework import status
 from rest_framework.response import Response
 from .utils import *
 from api.models import Room
+from .models import Vote
 
 # Create your views here.
 class AuthURL(APIView):
@@ -90,9 +91,19 @@ class CurrentSong(APIView):
                 'id': song_id
             }
             
+            self.update_room_song(room, song_id)
+            
             return Response(song, status=status.HTTP_200_OK)
         
         return Response({'Error':'Room Does Not Exist'}, status=status.HTTP_404_NOT_FOUND)
+    
+    def update_room_song(self, room, song_id):
+        current_song = room.current_song
+        
+        if current_song != song_id:
+            room.current_song = song_id
+            room.save(update_fields=['current_song'])
+            votes = Vote.objects.filter(room=room).delete()
 
 class PauseSong(APIView):
     def put(self, response, format=None):
