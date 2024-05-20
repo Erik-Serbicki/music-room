@@ -44,7 +44,9 @@ export default function MusicPlayer(props){
                             onClick={()=>{props.is_playing ? pauseSong() : playSong() }}>
                             {props.is_playing ? <Pause /> : <PlayArrow />}
                         </IconButton>
-                        <IconButton onClick={skipSong}><SkipNext /></IconButton>
+                        <IconButton onClick={skipSong}>
+                            <SkipNext /> {props.votes} / {props.votes_required}
+                        </IconButton>
                     </div>
                 </Grid>
             </Grid>

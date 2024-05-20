@@ -2758,7 +2758,7 @@ Add the onClick property to the skip button.
 We will use the arrow function later, once we implement the voting, but for now you can have it just return the skipSong() function.
 
 
-# Tracking Votes
+### Tracking Votes
 
 Now we will make a new model to track when users vote to skip a song. Go to spotify/models.py and make a new model.
 
@@ -2784,4 +2784,83 @@ Dont forget, we now need to make migrations and migrate, because we made changes
 python manage.py makemigrations
 python manage.py migrate
 ```
+
+### Updating the current song
+
+Since we added the current_song field to our Room model, let's write a function to track it. Fo to spoify/views.py, and add a new function to the Current Song class.
+
+```python
+from .models import Vote
+
+def update_room_song(self, room, song_id):
+    current_song = room.current_song
+    
+    if current_song != song_id:
+        room.current_song = song_id
+        room.save(update_fields=['current_song'])
+        votes = Vote.objects.filter(room=room).delete()
+```
+
+Here we just check if the song has actually changed, and if it has we will update the field. Lastly, we delete all the votes for that room, because when the next song plays we want to reset the votes.
+
+We can call that method at the end of the get() method in the same class. Just before the return, add
+
+```python
+self.update_room_song(room, song_id)
+```
+
+### Making the Votes Work
+
+Here we just add new logic to the SkipSong class.
+
+```python
+class SkipSong(APIView):
+    def post(self, request, format=None):
+        room_code = self.request.session.get('room_code')
+        query = Room.objects.filter(code=room_code)
+        
+        if query.exists():
+            room = query[0]
+            
+            # NEW CODE
+            votes = Vote.objects.filter(room=room, song_id=room.current_song)
+            votes_needed = room.votes_to_skip
+            
+            if self.request.session.session_key == room.host or len(votes) + 1 >= votes_needed: # NEW CODE
+                votes.delete() # NEW CODE
+                skip_song(room.host)
+            else:
+                # NEW CODE
+                vote = Vote(user=self.request.session.session_key, room=room, song_id=room.current_song)
+                vote.save()   
+            
+            return Response({}, status=status.HTTP_200_OK)
+        return Response({}, status=status.HTTP_404_NOT_FOUND)
+```
+
+The logic should work, but we want to actually be able to see the votes in the frontend.
+
+### Seeing the Votes in the Frontend
+
+First, we need a slight change to the CurrentSong class to reflect the votes.
+
+```python
+votes = len(Vote.objects.filter(room=room, song_id=song_id))
+            
+song = {
+    'title': item.get('name'),
+    'artist': artist_string,
+    'duration': duration,
+    'time': progress,
+    'img_url': album_cover,
+    'is_playing': is_playing,
+    'votes':votes,
+    'votes_required':room.votes_to_skip,
+    'id': song_id
+}
+```
+
+Just add the votes list, changs 'votes' in the song to be the length of that list, and add the votes required field.
+
+Now, go to MusicPlayer.js, and lets display these parameters on the page.
 
