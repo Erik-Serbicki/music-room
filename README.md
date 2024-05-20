@@ -2757,3 +2757,29 @@ Add the onClick property to the skip button.
 
 We will use the arrow function later, once we implement the voting, but for now you can have it just return the skipSong() function.
 
+
+# Tracking Votes
+
+Now we will make a new model to track when users vote to skip a song. Go to spotify/models.py and make a new model.
+
+```python
+class Vote(models.Model):
+    user = models.CharField(max_length=50, unique=True)
+    created_at = models.DateTimeField(auto_now_add=True) 
+    song_id = models.CharField(max_length=50)
+    room = models.ForeignKey(Room, on_delete=models.CASCADE) # ForiegnKey = other model is passed, delete ANYTHING refrencing the room (all votes)
+```
+
+Lastly, we will add one more thing to the original room model, in api/models.py. 
+
+```python
+current_song = models.CharField(max_length=50)
+```
+
+This is to keep track of which song the votes are for, so we can clear them when the song gets skipped or ends on its own.
+
+Dont forget, we now need to make migrations and migrate, because we made changes to the model.
+
+```bash
+
+```
