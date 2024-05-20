@@ -15,3 +15,5 @@ This web app is a music room, where a host a can create a room and play music, a
 *Why are you reading this when you could be watching the tutorial? Go do that.
 
 *I said go
+
+Checkout the repository wiki for a detailed walkthrough: [Wiki]( https://github.com/Erik-Serbicki/music-room/wiki )
